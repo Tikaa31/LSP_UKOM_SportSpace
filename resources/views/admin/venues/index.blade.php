@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Lapangan - SPORTSPACE</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-width: 320px;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
+
+        .admin-page {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .admin-title h1 {
+            margin: 0 0 6px;
+            font-size: 28px;
+        }
+
+        .admin-title p {
+            margin: 0;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .add-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            padding: 12px 20px;
+            border-radius: 12px;
+            background: #2563eb;
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .add-button:hover {
+            background: #1d4ed8;
+        }
+
+        .success-message {
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: #dcfce7;
+            color: #166534;
+            font-weight: 600;
+        }
+
+        .table-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            min-width: 850px;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            text-align: left;
+            vertical-align: middle;
+        }
+
+        th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .venue-image {
+            width: 75px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 10px;
+            display: block;
+            background: #f1f5f9;
+        }
+
+        .price {
+            font-weight: 700;
+            color: #2563eb;
+            white-space: nowrap;
+        }
+
+        .sport-badge {
+            display: inline-block;
+            padding: 7px 10px;
+            border-radius: 20px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 13px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .rating {
+            white-space: nowrap;
+        }
+
+        .action-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-buttons form {
+            margin: 0;
+        }
+
+        .edit-button,
+        .delete-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
+            padding: 8px 13px;
+            border: none;
+            border-radius: 9px;
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .edit-button {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .edit-button:hover {
+            background: #dbeafe;
+        }
+
+        .delete-button {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .delete-button:hover {
+            background: #fecaca;
+        }
+
+        .empty-state {
+            padding: 50px 20px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        /* MOBILE */
+        .venue-cards {
+            display: none;
+        }
+
+        .venue-card {
+            margin-bottom: 16px;
+            overflow: hidden;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+        }
+
+        .venue-card-image {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            display: block;
+            background: #f1f5f9;
+        }
+
+        .venue-card-content {
+            padding: 16px;
+        }
+
+        .venue-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .venue-card-name {
+            margin: 0 0 6px;
+            font-size: 19px;
+        }
+
+        .venue-card-location {
+            margin: 0;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .venue-card-rating {
+            flex-shrink: 0;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .venue-card-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .info-item {
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 12px;
+        }
+
+        .info-label {
+            display: block;
+            margin-bottom: 5px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .info-value {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .venue-card-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .venue-card-actions form {
+            width: 100%;
+            margin: 0;
+        }
+
+        .venue-card-actions .edit-button,
+        .venue-card-actions .delete-button {
+            width: 100%;
+            min-height: 44px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-page {
+                padding: 16px;
+            }
+
+            .admin-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .admin-title h1 {
+                font-size: 24px;
+            }
+
+            .add-button {
+                width: 100%;
+            }
+
+            .table-card {
+                display: none;
+            }
+
+            .venue-cards {
+                display: block;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .admin-page {
+                padding: 12px;
+            }
+
+            .venue-card-info {
+                grid-template-columns: 1fr;
+            }
+
+            .venue-card-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .venue-card-image {
+                height: 170px;
+            }
+
+            .venue-card-name {
+                font-size: 17px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="admin-page">
+
+    <div class="admin-header">
+
+        <div class="admin-title">
+            <h1>Manajemen Lapangan</h1>
+            <p>Kelola semua lapangan SPORTSPACE dari halaman admin.</p>
+        </div>
+
+        <a href="{{ route('admin.venues.create') }}" class="add-button">
+            + Tambah Lapangan
+        </a>
+
+    </div>
+
+
+    @if (session('success'))
+        <div class="success-message">
+            {{ session('success') }}
+        </div>
+    @endif
+
+
+    {{-- DESKTOP --}}
+    <div class="table-card">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Gambar</th>
+                    <th>Nama Lapangan</th>
+                    <th>Olahraga</th>
+                    <th>Lokasi</th>
+                    <th>Harga / Jam</th>
+                    <th>Rating</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @forelse ($venues as $venue)
+
+                    <tr>
+
+                        <td>
+                            @if ($venue->image)
+                                <img
+                                    src="{{ asset('storage/' . $venue->image) }}"
+                                    alt="{{ $venue->name }}"
+                                    class="venue-image"
+                                >
+                            @else
+                                Tidak ada gambar
+                            @endif
+                        </td>
+
+                        <td>
+                            <strong>{{ $venue->name }}</strong>
+                        </td>
+
+                        <td>
+                            <span class="sport-badge">
+                                {{ $venue->sport->icon ?? '' }}
+                                {{ $venue->sport->name ?? 'Belum ada' }}
+                            </span>
+                        </td>
+
+                        <td>{{ $venue->location }}</td>
+
+                        <td class="price">
+                            Rp{{ number_format($venue->price_per_hour, 0, ',', '.') }}
+                        </td>
+
+                        <td class="rating">
+                            ⭐ {{ number_format($venue->rating, 1) }}
+                        </td>
+
+                        <td>
+                            <div class="action-buttons">
+
+                                <a
+                                    href="{{ route('admin.venues.edit', $venue) }}"
+                                    class="edit-button"
+                                >
+                                    Edit
+                                </a>
+
+                                <form
+                                    action="{{ route('admin.venues.destroy', $venue) }}"
+                                    method="POST"
+                                    onsubmit="return confirm('Yakin ingin menghapus lapangan ini?')"
+                                >
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="delete-button">
+                                        Hapus
+                                    </button>
+                                </form>
+
+                            </div>
+                        </td>
+
+                    </tr>
+
+                @empty
+
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            Belum ada lapangan. Klik <strong>+ Tambah Lapangan</strong> untuk menambahkan.
+                        </td>
+                    </tr>
+
+                @endforelse
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {{-- MOBILE --}}
+    <div class="venue-cards">
+
+        @forelse ($venues as $venue)
+
+            <div class="venue-card">
+
+                @if ($venue->image)
+                    <img
+                        src="{{ asset('storage/' . $venue->image) }}"
+                        alt="{{ $venue->name }}"
+                        class="venue-card-image"
+                    >
+                @endif
+
+                <div class="venue-card-content">
+
+                    <div class="venue-card-top">
+
+                        <div>
+                            <h3 class="venue-card-name">
+                                {{ $venue->name }}
+                            </h3>
+
+                            <p class="venue-card-location">
+                                📍 {{ $venue->location }}
+                            </p>
+                        </div>
+
+                        <div class="venue-card-rating">
+                            ⭐ {{ number_format($venue->rating, 1) }}
+                        </div>
+
+                    </div>
+
+
+                    <div class="venue-card-info">
+
+                        <div class="info-item">
+                            <span class="info-label">Olahraga</span>
+
+                            <span class="info-value">
+                                {{ $venue->sport->icon ?? '' }}
+                                {{ $venue->sport->name ?? 'Belum ada' }}
+                            </span>
+                        </div>
+
+
+                        <div class="info-item">
+                            <span class="info-label">Harga / Jam</span>
+
+                            <span class="info-value price">
+                                Rp{{ number_format($venue->price_per_hour, 0, ',', '.') }}
+                            </span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="venue-card-actions">
+
+                        <a
+                            href="{{ route('admin.venues.edit', $venue) }}"
+                            class="edit-button"
+                        >
+                            Edit Lapangan
+                        </a>
+
+
+                        <form
+                            action="{{ route('admin.venues.destroy', $venue) }}"
+                            method="POST"
+                            onsubmit="return confirm('Yakin ingin menghapus lapangan ini?')"
+                        >
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit" class="delete-button">
+                                Hapus
+                            </button>
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        @empty
+
+            <div class="venue-card">
+                <div class="empty-state">
+                    Belum ada lapangan.<br>
+                    Klik <strong>+ Tambah Lapangan</strong> untuk menambahkan.
+                </div>
+            </div>
+
+        @endforelse
+
+    </div>
+
+</div>
+
+</body>
+</html>
