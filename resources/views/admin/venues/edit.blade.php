@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -33,19 +34,49 @@
             margin-bottom: 24px;
         }
 
+         /* TOMBOL KEMBALI RESPONSIF */
         .back-button {
-            width: 44px;
-            height: 44px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            box-sizing: border-box;
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
             flex-shrink: 0;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            background: white;
-            color: #1e293b;
+            padding: 0;
+            border: none;
+            border-radius: 13px;
+            background: #f1f5f9;
+            color: var(--text);
             text-decoration: none;
-            font-size: 24px;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .back-button svg {
+            display: block;
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .back-button:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .back-button:active {
+            transform: scale(0.96);
+        }
+
+        .back-button:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, 0.35);
+            outline-offset: 3px;
+        }
+
+        .page-title {
+            min-width: 0;
         }
 
         .page-title h1 {
@@ -82,6 +113,7 @@
         }
 
         .form-control {
+            display: block;
             width: 100%;
             min-height: 48px;
             padding: 12px 14px;
@@ -133,6 +165,7 @@
         }
 
         .image-preview {
+            display: block;
             width: 100%;
             max-width: 400px;
             height: 220px;
@@ -140,16 +173,15 @@
             border: 1px solid #e2e8f0;
             border-radius: 14px;
             background: #f8fafc;
-            display: block;
         }
 
         .no-image {
-            width: 100%;
-            max-width: 400px;
-            height: 220px;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
+            max-width: 400px;
+            height: 220px;
             border: 1px dashed #cbd5e1;
             border-radius: 14px;
             background: #f8fafc;
@@ -168,6 +200,9 @@
 
         .cancel-button,
         .submit-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             min-height: 48px;
             padding: 0 20px;
             border-radius: 12px;
@@ -178,13 +213,14 @@
         }
 
         .cancel-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             border: 1px solid #dbe2ea;
             background: white;
             color: #475569;
             text-decoration: none;
+        }
+
+        .cancel-button:hover {
+            background: #f8fafc;
         }
 
         .submit-button {
@@ -197,13 +233,28 @@
             background: #1d4ed8;
         }
 
+        .cancel-button:focus-visible,
+        .submit-button:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, 0.35);
+            outline-offset: 3px;
+        }
+
         @media (max-width: 600px) {
             .admin-page {
                 padding: 15px;
             }
 
+            .page-header {
+                gap: 12px;
+            }
+
             .page-title h1 {
                 font-size: 22px;
+            }
+
+            .page-title p {
+                font-size: 13px;
+                line-height: 1.5;
             }
 
             .form-card {
@@ -231,6 +282,30 @@
                 height: 180px;
             }
         }
+
+        @media (max-width: 360px) {
+            .admin-page {
+                padding: 12px;
+            }
+
+            .back-button {
+                width: 42px;
+                height: 42px;
+                min-width: 42px;
+            }
+
+            .page-header {
+                gap: 10px;
+            }
+
+            .page-title h1 {
+                font-size: 20px;
+            }
+
+            .form-card {
+                padding: 14px;
+            }
+        }
     </style>
 </head>
 
@@ -243,8 +318,21 @@
         <a
             href="{{ route('admin.venues.index') }}"
             class="back-button"
+            aria-label="Kembali ke daftar lapangan"
+            title="Kembali"
         >
-            ←
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M19 12H5"></path>
+                <path d="M12 19l-7-7 7-7"></path>
+            </svg>
         </a>
 
         <div class="page-title">
@@ -253,7 +341,6 @@
         </div>
 
     </div>
-
 
     <form
         action="{{ route('admin.venues.update', $venue) }}"
@@ -264,7 +351,6 @@
 
         @csrf
         @method('PUT')
-
 
         {{-- NAMA LAPANGAN --}}
         <div class="form-group">
@@ -288,7 +374,6 @@
 
         </div>
 
-
         {{-- JENIS OLAHRAGA --}}
         <div class="form-group">
 
@@ -304,14 +389,12 @@
             >
 
                 @foreach ($sports as $sport)
-
                     <option
                         value="{{ $sport->id }}"
                         {{ old('sport_id', $venue->sport_id) == $sport->id ? 'selected' : '' }}
                     >
                         {{ $sport->icon }} {{ $sport->name }}
                     </option>
-
                 @endforeach
 
             </select>
@@ -321,7 +404,6 @@
             @enderror
 
         </div>
-
 
         {{-- LOKASI --}}
         <div class="form-group">
@@ -342,7 +424,6 @@
             @enderror
 
         </div>
-
 
         <div class="form-row">
 
@@ -369,13 +450,10 @@
 
             </div>
 
-
             {{-- RATING --}}
             <div class="form-group">
 
-                <label for="rating">
-                    Rating
-                </label>
+                <label for="rating">Rating</label>
 
                 <input
                     type="number"
@@ -396,13 +474,10 @@
 
         </div>
 
-
         {{-- GAMBAR --}}
         <div class="form-group">
 
-            <label for="image">
-                Ganti Gambar
-            </label>
+            <label for="image">Ganti Gambar</label>
 
             <input
                 type="file"
@@ -415,7 +490,6 @@
             @error('image')
                 <span class="error-text">{{ $message }}</span>
             @enderror
-
 
             <div class="current-image">
 
@@ -455,7 +529,6 @@
 
         </div>
 
-
         <div class="form-actions">
 
             <a
@@ -478,29 +551,38 @@
 
 </div>
 
-
 <script>
     const imageInput = document.getElementById('image');
     const imagePreview = document.getElementById('imagePreview');
     const noImage = document.getElementById('noImage');
 
-    imageInput.addEventListener('change', function () {
+    let previewUrl = null;
 
+    imageInput.addEventListener('change', function () {
         const file = this.files[0];
 
         if (!file) {
             return;
         }
 
-        const imageUrl = URL.createObjectURL(file);
+        if (!file.type.startsWith('image/')) {
+            alert('Silakan pilih file gambar yang valid.');
+            this.value = '';
+            return;
+        }
 
-        imagePreview.src = imageUrl;
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+        }
+
+        previewUrl = URL.createObjectURL(file);
+
+        imagePreview.src = previewUrl;
         imagePreview.style.display = 'block';
 
         if (noImage) {
             noImage.style.display = 'none';
         }
-
     });
 </script>
 

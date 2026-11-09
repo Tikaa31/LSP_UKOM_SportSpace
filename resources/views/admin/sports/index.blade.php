@@ -27,22 +27,79 @@
         }
 
         .admin-header {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
             align-items: center;
             gap: 20px;
             margin-bottom: 24px;
         }
 
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            justify-self: start;
+            gap: 10px;
+            min-width: 0;
+            color: #1e293b;
+            text-decoration: none;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .brand img {
+            display: block;
+            width: 46px;
+            height: 46px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .admin-title {
+            text-align: center;
+            min-width: 0;
+        }
+
         .admin-title h1 {
             margin: 0 0 6px;
             font-size: 28px;
+            line-height: 1.2;
         }
 
         .admin-title p {
             margin: 0;
             color: #64748b;
             line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: end;
+            min-height: 42px;
+            padding: 10px 18px;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            background: #ffffff;
+            color: #334155;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 700;
+            white-space: nowrap;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .back-button:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+        }
+
+        .page-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
         }
 
         .add-button {
@@ -57,6 +114,7 @@
             text-decoration: none;
             font-weight: 700;
             white-space: nowrap;
+            transition: background 0.2s;
         }
 
         .add-button:hover {
@@ -69,6 +127,15 @@
             border-radius: 12px;
             background: #dcfce7;
             color: #166534;
+            font-weight: 600;
+        }
+
+        .error-message {
+            margin-bottom: 20px;
+            padding: 14px 16px;
+            border-radius: 12px;
+            background: #fee2e2;
+            color: #991b1b;
             font-weight: 600;
         }
 
@@ -90,6 +157,7 @@
             padding: 16px;
             text-align: left;
             border-bottom: 1px solid #e2e8f0;
+            vertical-align: middle;
         }
 
         th {
@@ -113,9 +181,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
             border-radius: 14px;
             background: #eff6ff;
-            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .sport-icon img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .sport-name {
@@ -143,19 +219,27 @@
             font-weight: 700;
             cursor: pointer;
             text-decoration: none;
-        }
-
-        .edit-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .edit-button {
             background: #eff6ff;
             color: #2563eb;
+        }
+
+        .edit-button:hover {
+            background: #dbeafe;
         }
 
         .delete-button {
             background: #fee2e2;
             color: #dc2626;
+        }
+
+        .delete-button:hover {
+            background: #fecaca;
         }
 
         .empty-state {
@@ -164,7 +248,6 @@
             color: #64748b;
         }
 
-        /* MOBILE */
         .sport-cards {
             display: none;
         }
@@ -189,6 +272,7 @@
             margin: 0;
             font-size: 16px;
             font-weight: 700;
+            overflow-wrap: anywhere;
         }
 
         .sport-card-actions {
@@ -207,12 +291,36 @@
             }
 
             .admin-header {
-                flex-direction: column;
-                align-items: stretch;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 16px;
+            }
+
+            .brand {
+                font-size: 17px;
+            }
+
+            .brand img {
+                width: 40px;
+                height: 40px;
+            }
+
+            .admin-title {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                text-align: left;
             }
 
             .admin-title h1 {
                 font-size: 24px;
+            }
+
+            .back-button {
+                grid-column: 2;
+                grid-row: 1;
+            }
+
+            .page-actions {
+                justify-content: stretch;
             }
 
             .add-button {
@@ -231,6 +339,30 @@
         @media (max-width: 400px) {
             .admin-page {
                 padding: 12px;
+            }
+
+            .admin-header {
+                gap: 12px;
+            }
+
+            .brand {
+                gap: 7px;
+                font-size: 15px;
+            }
+
+            .brand img {
+                width: 34px;
+                height: 34px;
+            }
+
+            .back-button {
+                min-height: 38px;
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+
+            .admin-title h1 {
+                font-size: 22px;
             }
 
             .sport-card {
@@ -258,7 +390,21 @@
 
 <div class="admin-page">
 
-    <div class="admin-header">
+    {{-- HEADER ADMIN --}}
+    <header class="admin-header">
+
+        <a
+            href="{{ route('admin.dashboard') }}"
+            class="brand"
+            aria-label="SPORTSPACE - Dashboard Admin"
+        >
+            <img
+                src="{{ asset('image/logosportspace.png') }}"
+                alt="Logo SPORTSPACE"
+            >
+
+            <span>SPORTSPACE</span>
+        </a>
 
         <div class="admin-title">
             <h1>Manajemen Olahraga</h1>
@@ -266,21 +412,36 @@
         </div>
 
         <a
+            href="{{ route('admin.dashboard') }}"
+            class="back-button"
+        >
+            Kembali
+        </a>
+
+    </header>
+
+    {{-- TOMBOL TAMBAH OLAHRAGA --}}
+    <div class="page-actions">
+        <a
             href="{{ route('admin.sports.create') }}"
             class="add-button"
         >
             + Tambah Olahraga
         </a>
-
     </div>
 
-
+    {{-- NOTIFIKASI --}}
     @if (session('success'))
         <div class="success-message">
             {{ session('success') }}
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="error-message">
+            {{ session('error') }}
+        </div>
+    @endif
 
     {{-- DESKTOP --}}
     <div class="table-card">
@@ -308,7 +469,14 @@
 
                         <td>
                             <div class="sport-icon">
-                                {{ $sport->icon }}
+                                @if ($sport->icon)
+                                    <img
+                                        src="{{ asset('storage/' . $sport->icon) }}"
+                                        alt="Icon {{ $sport->name }}"
+                                    >
+                                @else
+                                    🏆
+                                @endif
                             </div>
                         </td>
 
@@ -319,7 +487,6 @@
                         </td>
 
                         <td>
-
                             <div class="action-buttons">
 
                                 <a
@@ -343,11 +510,9 @@
                                     >
                                         Hapus
                                     </button>
-
                                 </form>
 
                             </div>
-
                         </td>
 
                     </tr>
@@ -370,7 +535,6 @@
 
     </div>
 
-
     {{-- MOBILE --}}
     <div class="sport-cards">
 
@@ -379,7 +543,14 @@
             <div class="sport-card">
 
                 <div class="sport-icon">
-                    {{ $sport->icon }}
+                    @if ($sport->icon)
+                        <img
+                            src="{{ asset('storage/' . $sport->icon) }}"
+                            alt="Icon {{ $sport->name }}"
+                        >
+                    @else
+                        🏆
+                    @endif
                 </div>
 
                 <div class="sport-card-content">
@@ -411,7 +582,6 @@
                             >
                                 Hapus
                             </button>
-
                         </form>
 
                     </div>

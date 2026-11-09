@@ -18,6 +18,10 @@ class Booking extends Model
         'duration',
         'total_price',
         'status',
+        'payment_method',
+        'payment_proof',
+        'payment_status',
+        'rejection_reason',
     ];
 
     protected $casts = [
@@ -32,5 +36,10 @@ class Booking extends Model
     public function venue()
     {
         return $this->belongsTo(Venue::class);
+    }
+
+    public function refund()
+    {
+        return $this->hasOne(Refund::class);
     }
 }

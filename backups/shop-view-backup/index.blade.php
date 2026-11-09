@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -39,7 +40,6 @@
         }
 
         /* HEADER */
-
         .shop-header {
             display: flex;
             align-items: center;
@@ -52,40 +52,69 @@
             display: flex;
             align-items: center;
             gap: 14px;
+            min-width: 0;
         }
 
+         /* TOMBOL KEMBALI RESPONSIF */
         .back-button {
-            width: 48px;
-            height: 48px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            box-sizing: border-box;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
             flex-shrink: 0;
-            border: 1px solid #e8edf5;
-            border-radius: 16px;
-            background: #ffffff;
-            color: #172033;
-            font-size: 25px;
+            padding: 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            background: #fff;
+            color: #1e293b;
+            text-decoration: none;
             cursor: pointer;
-            transition: 0.2s ease;
-            box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+            transition: background 0.2s ease, border-color 0.2s ease,
+                        transform 0.2s ease;
+        }
+
+        .back-button svg {
+            display: block;
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
         }
 
         .back-button:hover {
-            transform: translateX(-2px);
-            background: #f8fafc;
+            background: #eaf2ff;
+            border-color: #c9dcff;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.16);
+            transform: translateY(-1px);
+        }
+
+        .back-button:active {
+            transform: scale(0.97);
+        }
+
+        .back-button:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, 0.35);
+            outline-offset: 3px;
+        }
+
+        .shop-title {
+            min-width: 0;
         }
 
         .shop-title h1 {
             margin: 0;
             font-size: 27px;
             letter-spacing: -0.5px;
+            overflow-wrap: anywhere;
         }
 
         .shop-title p {
             margin: 4px 0 0;
             color: #7b8798;
             font-size: 14px;
+            line-height: 1.4;
         }
 
         .cart-button {
@@ -127,7 +156,6 @@
         }
 
         /* SEARCH */
-
         .shop-search {
             display: flex;
             align-items: center;
@@ -162,7 +190,6 @@
         }
 
         /* HERO */
-
         .shop-hero {
             position: relative;
             margin-bottom: 28px;
@@ -243,7 +270,6 @@
         }
 
         /* SECTION */
-
         .section-header {
             display: flex;
             align-items: center;
@@ -264,7 +290,6 @@
         }
 
         /* CATEGORY */
-
         .category-row {
             display: flex;
             gap: 10px;
@@ -304,7 +329,6 @@
         }
 
         /* PRODUCT */
-
         .product-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -442,7 +466,6 @@
         }
 
         /* TOAST */
-
         .toast {
             position: fixed;
             z-index: 9999;
@@ -470,7 +493,6 @@
         }
 
         /* RESPONSIVE */
-
         @media (max-width: 1050px) {
             .product-grid {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -483,7 +505,12 @@
             }
 
             .shop-header {
+                gap: 12px;
                 margin-bottom: 18px;
+            }
+
+            .shop-header-left {
+                gap: 12px;
             }
 
             .shop-title h1 {
@@ -492,6 +519,11 @@
 
             .shop-title p {
                 font-size: 12px;
+            }
+
+            .cart-button {
+                width: 46px;
+                height: 46px;
             }
 
             .shop-hero {
@@ -537,14 +569,32 @@
                 padding-left: 10px;
             }
 
+            .shop-header-left {
+                gap: 9px;
+            }
+
             .shop-title h1 {
                 font-size: 19px;
+            }
+
+            .shop-title p {
+                font-size: 11px;
             }
 
             .back-button,
             .cart-button {
                 width: 44px;
                 height: 44px;
+                min-width: 44px;
+            }
+
+            .back-button {
+                padding: 0;
+            }
+
+            .back-button svg {
+                width: 22px;
+                height: 22px;
             }
 
             .product-grid {
@@ -566,8 +616,21 @@
                 type="button"
                 class="back-button"
                 onclick="window.history.back()"
+                aria-label="Kembali"
+                title="Kembali"
             >
-                ←
+                <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                >
+            <path d="M19 12H5"></path>
+            <path d="m12 19-7-7 7-7"></path>
+        </svg>
             </button>
 
             <div class="shop-title">
@@ -581,6 +644,8 @@
             type="button"
             class="cart-button"
             onclick="showToast('Keranjang kamu memiliki ' + cartCount + ' produk')"
+            aria-label="Lihat keranjang"
+            title="Lihat keranjang"
         >
             🛒
             <span class="cart-count" id="cartCount">0</span>
@@ -588,9 +653,7 @@
 
     </header>
 
-
     <div class="shop-search">
-
         <span class="search-icon">⌕</span>
 
         <input
@@ -598,15 +661,12 @@
             id="searchProduct"
             placeholder="Cari bola, raket, perlengkapan..."
             autocomplete="off"
+            aria-label="Cari produk"
         >
-
     </div>
 
-
     <section class="shop-hero">
-
         <div class="shop-hero-content">
-
             <span class="hero-label">SPORT GEAR</span>
 
             <h2>Siap main? Lengkapi dulu gear kamu.</h2>
@@ -623,20 +683,15 @@
             >
                 Lihat Produk 
             </button>
-
         </div>
-
     </section>
 
-
     <section>
-
         <div class="section-header">
             <h2>Belanja berdasarkan olahraga</h2>
         </div>
 
         <div class="category-row">
-
             <button type="button" class="category-button active" data-category="all">
                 Semua
             </button>
@@ -660,22 +715,16 @@
             <button type="button" class="category-button" data-category="Padel">
                 🎾 Padel
             </button>
-
         </div>
-
     </section>
 
-
     <section id="productSection">
-
         <div class="section-header">
             <h2>Produk Pilihan</h2>
             <span class="product-total" id="productTotal">6 produk</span>
         </div>
 
-
         <div class="product-grid" id="productGrid">
-
 
             <article class="product-card"
                 data-category="Futsal"
@@ -683,9 +732,7 @@
 
                 <div class="product-image">
                     <span class="product-badge">BEST SELLER</span>
-
-                    <button type="button" class="favorite-product">♡</button>
-
+                    <button type="button" class="favorite-product" aria-label="Favoritkan Bola Futsal Pro">♡</button>
                     ⚽
                 </div>
 
@@ -695,22 +742,17 @@
 
                     <div class="product-bottom">
                         <span class="product-price">Rp189.000</span>
-
-                        <button type="button" class="add-cart-button">
-                            +
-                        </button>
+                        <button type="button" class="add-cart-button" aria-label="Tambah Bola Futsal Pro ke keranjang">+</button>
                     </div>
                 </div>
-
             </article>
-
 
             <article class="product-card"
                 data-category="Badminton"
                 data-name="Shuttlecock Premium">
 
                 <div class="product-image">
-                    <button type="button" class="favorite-product">♡</button>
+                    <button type="button" class="favorite-product" aria-label="Favoritkan Shuttlecock Premium">♡</button>
                     🏸
                 </div>
 
@@ -720,22 +762,17 @@
 
                     <div class="product-bottom">
                         <span class="product-price">Rp85.000</span>
-
-                        <button type="button" class="add-cart-button">
-                            +
-                        </button>
+                        <button type="button" class="add-cart-button" aria-label="Tambah Shuttlecock Premium ke keranjang">+</button>
                     </div>
                 </div>
-
             </article>
-
 
             <article class="product-card"
                 data-category="Basket"
                 data-name="Bola Basket Indoor">
 
                 <div class="product-image">
-                    <button type="button" class="favorite-product">♡</button>
+                    <button type="button" class="favorite-product" aria-label="Favoritkan Bola Basket Indoor">♡</button>
                     🏀
                 </div>
 
@@ -745,15 +782,10 @@
 
                     <div class="product-bottom">
                         <span class="product-price">Rp249.000</span>
-
-                        <button type="button" class="add-cart-button">
-                            +
-                        </button>
+                        <button type="button" class="add-cart-button" aria-label="Tambah Bola Basket Indoor ke keranjang">+</button>
                     </div>
                 </div>
-
             </article>
-
 
             <article class="product-card"
                 data-category="Tenis"
@@ -761,9 +793,7 @@
 
                 <div class="product-image">
                     <span class="product-badge">NEW</span>
-
-                    <button type="button" class="favorite-product">♡</button>
-
+                    <button type="button" class="favorite-product" aria-label="Favoritkan Bola Tenis Competition">♡</button>
                     🎾
                 </div>
 
@@ -773,22 +803,17 @@
 
                     <div class="product-bottom">
                         <span class="product-price">Rp120.000</span>
-
-                        <button type="button" class="add-cart-button">
-                            +
-                        </button>
+                        <button type="button" class="add-cart-button" aria-label="Tambah Bola Tenis Competition ke keranjang">+</button>
                     </div>
                 </div>
-
             </article>
-
 
             <article class="product-card"
                 data-category="Padel"
                 data-name="Grip Raket Padel">
 
                 <div class="product-image">
-                    <button type="button" class="favorite-product">♡</button>
+                    <button type="button" class="favorite-product" aria-label="Favoritkan Grip Raket Padel">♡</button>
                     🎾
                 </div>
 
@@ -798,22 +823,17 @@
 
                     <div class="product-bottom">
                         <span class="product-price">Rp65.000</span>
-
-                        <button type="button" class="add-cart-button">
-                            +
-                        </button>
+                        <button type="button" class="add-cart-button" aria-label="Tambah Grip Raket Padel ke keranjang">+</button>
                     </div>
                 </div>
-
             </article>
-
 
             <article class="product-card"
                 data-category="Futsal"
                 data-name="Kaos Kaki Olahraga">
 
                 <div class="product-image">
-                    <button type="button" class="favorite-product">♡</button>
+                    <button type="button" class="favorite-product" aria-label="Favoritkan Kaos Kaki Olahraga">♡</button>
                     🧦
                 </div>
 
@@ -823,65 +843,36 @@
 
                     <div class="product-bottom">
                         <span class="product-price">Rp35.000</span>
-
-                        <button type="button" class="add-cart-button">
-                            +
-                        </button>
+                        <button type="button" class="add-cart-button" aria-label="Tambah Kaos Kaki Olahraga ke keranjang">+</button>
                     </div>
                 </div>
-
             </article>
 
-
-            <div
-                class="empty-product"
-                id="emptyProduct"
-                style="display: none;"
-            >
+            <div class="empty-product" id="emptyProduct" style="display: none;">
                 😕<br><br>
                 Produk yang kamu cari belum tersedia.
             </div>
 
         </div>
-
     </section>
 
 </main>
 
-
-<div class="toast" id="toast"></div>
-
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-
     let cartCount = 0;
 
-    const categoryButtons =
-        document.querySelectorAll('.category-button');
-
-    const productCards =
-        document.querySelectorAll('.product-card');
-
-    const searchProduct =
-        document.getElementById('searchProduct');
-
-    const emptyProduct =
-        document.getElementById('emptyProduct');
-
-    const productTotal =
-        document.getElementById('productTotal');
-
-    const cartCountElement =
-        document.getElementById('cartCount');
-
-    const toast =
-        document.getElementById('toast');
-
+    const categoryButtons = document.querySelectorAll('.category-button');
+    const productCards = document.querySelectorAll('.product-card');
+    const searchProduct = document.getElementById('searchProduct');
+    const emptyProduct = document.getElementById('emptyProduct');
+    const productTotal = document.getElementById('productTotal');
+    const cartCountElement = document.getElementById('cartCount');
+    const toast = document.getElementById('toast');
 
     function showToast(message) {
-
         toast.textContent = message;
-
         toast.classList.add('show');
 
         clearTimeout(window.toastTimer);
@@ -889,29 +880,20 @@
         window.toastTimer = setTimeout(function() {
             toast.classList.remove('show');
         }, 2500);
-
     }
 
-
     function filterProducts() {
-
         const activeCategory =
             document.querySelector('.category-button.active')
-            ?.dataset.category || 'all';
+                ?.dataset.category || 'all';
 
-        const keyword =
-            searchProduct.value.toLowerCase().trim();
+        const keyword = searchProduct.value.toLowerCase().trim();
 
         let totalVisible = 0;
 
-
         productCards.forEach(function(product) {
-
-            const category =
-                product.dataset.category.toLowerCase();
-
-            const name =
-                product.dataset.name.toLowerCase();
+            const category = product.dataset.category.toLowerCase();
+            const name = product.dataset.name.toLowerCase();
 
             const categoryMatch =
                 activeCategory === 'all' ||
@@ -921,142 +903,81 @@
                 name.includes(keyword) ||
                 category.includes(keyword);
 
-
             if (categoryMatch && searchMatch) {
-
                 product.style.display = '';
                 totalVisible++;
-
             } else {
-
                 product.style.display = 'none';
-
             }
-
         });
-
 
         emptyProduct.style.display =
             totalVisible === 0 ? 'block' : 'none';
 
-
-        productTotal.textContent =
-            totalVisible + ' produk';
-
+        productTotal.textContent = totalVisible + ' produk';
     }
 
-
     categoryButtons.forEach(function(button) {
-
         button.addEventListener('click', function() {
-
             categoryButtons.forEach(function(item) {
                 item.classList.remove('active');
             });
 
             this.classList.add('active');
-
             filterProducts();
-
         });
-
     });
-
 
     searchProduct.addEventListener('input', function() {
         filterProducts();
     });
 
+    document.querySelectorAll('.favorite-product').forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            event.stopPropagation();
 
-    document.querySelectorAll('.favorite-product')
-        .forEach(function(button) {
+            this.classList.toggle('active');
 
-            button.addEventListener('click', function(event) {
-
-                event.stopPropagation();
-
-                this.classList.toggle('active');
-
-                this.textContent =
-                    this.classList.contains('active')
-                        ? '♥'
-                        : '♡';
-
-            });
-
+            this.textContent = this.classList.contains('active')
+                ? '♥'
+                : '♡';
         });
-
-
-    document.querySelectorAll('.add-cart-button')
-        .forEach(function(button) {
-
-            button.addEventListener('click', function(event) {
-
-                event.stopPropagation();
-
-                const product =
-                    this.closest('.product-card');
-
-                const productName =
-                    product.dataset.name;
-
-
-                if (!this.classList.contains('added')) {
-
-                    this.classList.add('added');
-
-                    this.textContent = '✓';
-
-                    cartCount++;
-
-                    cartCountElement.textContent =
-                        cartCount;
-
-                    showToast(
-                        '✓ ' +
-                        productName +
-                        ' ditambahkan ke keranjang'
-                    );
-
-                } else {
-
-                    this.classList.remove('added');
-
-                    this.textContent = '+';
-
-                    cartCount--;
-
-                    cartCountElement.textContent =
-                        cartCount;
-
-                    showToast(
-                        productName +
-                        ' dihapus dari keranjang'
-                    );
-
-                }
-
-            });
-
-        });
-
-
-    productCards.forEach(function(product) {
-
-        product.addEventListener('click', function() {
-
-            const productName =
-                this.dataset.name;
-
-            showToast(
-                productName +
-                ' • Detail produk segera tersedia'
-            );
-
-        });
-
     });
 
+    document.querySelectorAll('.add-cart-button').forEach(function(button) {
+        button.addEventListener('click', function(event) {
+            event.stopPropagation();
+
+            const product = this.closest('.product-card');
+            const productName = product.dataset.name;
+
+            if (!this.classList.contains('added')) {
+                this.classList.add('added');
+                this.textContent = '✓';
+
+                cartCount++;
+                cartCountElement.textContent = cartCount;
+
+                showToast('✓ ' + productName + ' ditambahkan ke keranjang');
+            } else {
+                this.classList.remove('added');
+                this.textContent = '+';
+
+                cartCount--;
+                cartCountElement.textContent = cartCount;
+
+                showToast(productName + ' dihapus dari keranjang');
+            }
+        });
+    });
+
+    productCards.forEach(function(product) {
+        product.addEventListener('click', function() {
+            const productName = this.dataset.name;
+
+            showToast(productName + ' • Detail produk segera tersedia');
+        });
+    });
 </script>
 
 </body>

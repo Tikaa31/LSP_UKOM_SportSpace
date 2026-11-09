@@ -34,18 +34,48 @@
         }
 
         .back-button {
-            width: 44px;
-            height: 44px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
+            box-sizing: border-box;
+            width: 44px;
+            height: 44px;
+            min-width: 44px;
             flex-shrink: 0;
+            padding: 0;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
-            background: white;
+            background: #fff;
             color: #1e293b;
             text-decoration: none;
-            font-size: 24px;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease,
+                        transform 0.2s ease;
+        }
+
+        .back-button svg {
+            display: block;
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .back-button:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .back-button:active {
+            transform: scale(0.96);
+        }
+
+        .back-button:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, 0.35);
+            outline-offset: 3px;
+        }
+
+        .page-title {
+            min-width: 0;
         }
 
         .page-title h1 {
@@ -122,19 +152,27 @@
         }
 
         .icon-preview {
-            width: 55px;
-            height: 55px;
+            width: 70px;
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
+            overflow: hidden;
             border-radius: 14px;
             background: #eff6ff;
-            font-size: 30px;
+        }
+
+        .icon-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .preview-text {
             color: #64748b;
             font-size: 14px;
+            line-height: 1.5;
         }
 
         .form-actions {
@@ -167,6 +205,10 @@
             text-decoration: none;
         }
 
+        .cancel-button:hover {
+            background: #f8fafc;
+        }
+
         .submit-button {
             border: none;
             background: #2563eb;
@@ -177,13 +219,28 @@
             background: #1d4ed8;
         }
 
+        .cancel-button:focus-visible,
+        .submit-button:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, 0.35);
+            outline-offset: 3px;
+        }
+
         @media (max-width: 600px) {
             .admin-page {
                 padding: 15px;
             }
 
+            .page-header {
+                gap: 12px;
+            }
+
             .page-title h1 {
                 font-size: 22px;
+            }
+
+            .page-title p {
+                font-size: 13px;
+                line-height: 1.5;
             }
 
             .form-card {
@@ -200,6 +257,30 @@
                 width: 100%;
             }
         }
+
+        @media (max-width: 360px) {
+            .admin-page {
+                padding: 12px;
+            }
+
+            .back-button {
+                width: 42px;
+                height: 42px;
+                min-width: 42px;
+            }
+
+            .page-header {
+                gap: 10px;
+            }
+
+            .page-title h1 {
+                font-size: 20px;
+            }
+
+            .form-card {
+                padding: 14px;
+            }
+        }
     </style>
 </head>
 
@@ -212,27 +293,39 @@
         <a
             href="{{ route('admin.sports.index') }}"
             class="back-button"
+            aria-label="Kembali ke daftar olahraga"
+            title="Kembali"
         >
-            ←
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M19 12H5"></path>
+                <path d="M12 19l-7-7 7-7"></path>
+            </svg>
         </a>
 
         <div class="page-title">
             <h1>Edit Olahraga</h1>
-            <p>Ubah nama atau icon olahraga.</p>
+            <p>Ubah nama atau gambar olahraga.</p>
         </div>
 
     </div>
 
-
     <form
         action="{{ route('admin.sports.update', $sport) }}"
         method="POST"
+        enctype="multipart/form-data"
         class="form-card"
     >
 
         @csrf
         @method('PUT')
-
 
         <div class="form-group">
 
@@ -247,6 +340,7 @@
                 name="name"
                 class="form-control @error('name') is-invalid @enderror"
                 value="{{ old('name', $sport->name) }}"
+                required
             >
 
             @error('name')
@@ -255,45 +349,54 @@
 
         </div>
 
-
         <div class="form-group">
 
             <label for="icon">
-                Icon Olahraga
-                <span class="required">*</span>
+                Gambar Icon Olahraga
             </label>
 
             <input
-                type="text"
+                type="file"
                 id="icon"
                 name="icon"
                 class="form-control @error('icon') is-invalid @enderror"
-                value="{{ old('icon', $sport->icon) }}"
-                placeholder="Contoh: ⚽"
+                accept="image/png,image/jpeg"
             >
+
+            <small class="preview-text">
+                Kosongkan jika tidak ingin mengganti gambar.
+                Format JPG, JPEG, atau PNG. Maksimal 2 MB.
+            </small>
 
             @error('icon')
                 <span class="error-text">{{ $message }}</span>
             @enderror
 
-
             <div class="icon-preview-box">
 
-                <div
-                    class="icon-preview"
-                    id="iconPreview"
-                >
-                    {{ old('icon', $sport->icon) }}
+                <div class="icon-preview">
+                    <img
+                        id="iconPreview"
+                        src="{{ $sport->icon ? asset('storage/' . $sport->icon) : '' }}"
+                        alt="Preview gambar olahraga"
+                        style="{{ $sport->icon ? 'display:block;' : 'display:none;' }}"
+                    >
+
+                    <span
+                        id="previewPlaceholder"
+                        style="{{ $sport->icon ? 'display:none;' : 'display:block;' }}"
+                    >
+                        🏆
+                    </span>
                 </div>
 
-                <div class="preview-text">
-                    Preview icon olahraga
+                <div class="preview-text" id="previewText">
+                    {{ $sport->icon ? 'Gambar olahraga saat ini.' : 'Belum ada gambar.' }}
                 </div>
 
             </div>
 
         </div>
-
 
         <div class="form-actions">
 
@@ -317,19 +420,43 @@
 
 </div>
 
-
 <script>
     const iconInput = document.getElementById('icon');
     const iconPreview = document.getElementById('iconPreview');
+    const previewPlaceholder = document.getElementById('previewPlaceholder');
+    const previewText = document.getElementById('previewText');
 
-    iconInput.addEventListener('input', function () {
+    iconInput.addEventListener('change', function () {
+        const file = this.files[0];
 
-        if (this.value.trim() !== '') {
-            iconPreview.textContent = this.value;
-        } else {
-            iconPreview.textContent = '🏆';
+        if (!file) {
+            return;
         }
 
+        const allowedTypes = ['image/jpeg', 'image/png'];
+
+        if (!allowedTypes.includes(file.type)) {
+            alert('Format gambar harus JPG, JPEG, atau PNG.');
+            this.value = '';
+            return;
+        }
+
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Ukuran gambar maksimal 2 MB.');
+            this.value = '';
+            return;
+        }
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            iconPreview.src = event.target.result;
+            iconPreview.style.display = 'block';
+            previewPlaceholder.style.display = 'none';
+            previewText.textContent = file.name;
+        };
+
+        reader.readAsDataURL(file);
     });
 </script>
 

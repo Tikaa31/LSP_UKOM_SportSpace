@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -33,20 +34,49 @@
             margin-bottom: 24px;
         }
 
+         /* TOMBOL KEMBALI RESPONSIF */
         .back-button {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 44px;
-            height: 44px;
+            box-sizing: border-box;
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
             flex-shrink: 0;
-            border-radius: 12px;
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            color: #1e293b;
+            padding: 0;
+            border: none;
+            border-radius: 13px;
+            background: #f1f5f9;
+            color: var(--text);
             text-decoration: none;
-            font-size: 24px;
-            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .back-button svg {
+            display: block;
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .back-button:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .back-button:active {
+            transform: scale(0.96);
+        }
+
+        .back-button:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, 0.35);
+            outline-offset: 3px;
+        }
+
+        .page-title {
+            min-width: 0;
         }
 
         .page-title h1 {
@@ -83,6 +113,7 @@
         }
 
         .form-control {
+            display: block;
             width: 100%;
             min-height: 48px;
             padding: 12px 14px;
@@ -143,6 +174,9 @@
 
         .cancel-button,
         .submit-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             min-height: 48px;
             padding: 0 20px;
             border-radius: 12px;
@@ -153,13 +187,14 @@
         }
 
         .cancel-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             border: 1px solid #dbe2ea;
             background: #ffffff;
             color: #475569;
             text-decoration: none;
+        }
+
+        .cancel-button:hover {
+            background: #f8fafc;
         }
 
         .submit-button {
@@ -172,13 +207,28 @@
             background: #1d4ed8;
         }
 
+        .cancel-button:focus-visible,
+        .submit-button:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, 0.35);
+            outline-offset: 3px;
+        }
+
         @media (max-width: 600px) {
             .admin-page {
                 padding: 15px;
             }
 
+            .page-header {
+                gap: 12px;
+            }
+
             .page-title h1 {
                 font-size: 22px;
+            }
+
+            .page-title p {
+                font-size: 13px;
+                line-height: 1.5;
             }
 
             .form-card {
@@ -204,6 +254,30 @@
                 height: 180px;
             }
         }
+
+        @media (max-width: 360px) {
+            .admin-page {
+                padding: 12px;
+            }
+
+            .back-button {
+                width: 42px;
+                height: 42px;
+                min-width: 42px;
+            }
+
+            .page-header {
+                gap: 10px;
+            }
+
+            .page-title h1 {
+                font-size: 20px;
+            }
+
+            .form-card {
+                padding: 14px;
+            }
+        }
     </style>
 </head>
 
@@ -216,9 +290,21 @@
         <a
             href="{{ route('admin.venues.index') }}"
             class="back-button"
-            aria-label="Kembali"
+            aria-label="Kembali ke daftar lapangan"
+            title="Kembali"
         >
-            ←
+            <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+            >
+                <path d="M19 12H5"></path>
+                <path d="M12 19l-7-7 7-7"></path>
+            </svg>
         </a>
 
         <div class="page-title">
@@ -228,7 +314,6 @@
 
     </div>
 
-
     <form
         action="{{ route('admin.venues.store') }}"
         method="POST"
@@ -237,7 +322,6 @@
     >
 
         @csrf
-
 
         {{-- NAMA LAPANGAN --}}
         <div class="form-group">
@@ -257,13 +341,10 @@
             >
 
             @error('name')
-                <span class="error-text">
-                    {{ $message }}
-                </span>
+                <span class="error-text">{{ $message }}</span>
             @enderror
 
         </div>
-
 
         {{-- OLAHRAGA --}}
         <div class="form-group">
@@ -278,32 +359,23 @@
                 name="sport_id"
                 class="form-control @error('sport_id') is-invalid @enderror"
             >
-
-                <option value="">
-                    -- Pilih Olahraga --
-                </option>
+                <option value="">-- Pilih Olahraga --</option>
 
                 @foreach ($sports as $sport)
-
                     <option
                         value="{{ $sport->id }}"
                         {{ old('sport_id') == $sport->id ? 'selected' : '' }}
                     >
                         {{ $sport->icon }} {{ $sport->name }}
                     </option>
-
                 @endforeach
-
             </select>
 
             @error('sport_id')
-                <span class="error-text">
-                    {{ $message }}
-                </span>
+                <span class="error-text">{{ $message }}</span>
             @enderror
 
         </div>
-
 
         {{-- LOKASI --}}
         <div class="form-group">
@@ -321,13 +393,10 @@
             >{{ old('location') }}</textarea>
 
             @error('location')
-                <span class="error-text">
-                    {{ $message }}
-                </span>
+                <span class="error-text">{{ $message }}</span>
             @enderror
 
         </div>
-
 
         <div class="form-row">
 
@@ -350,20 +419,15 @@
                 >
 
                 @error('price_per_hour')
-                    <span class="error-text">
-                        {{ $message }}
-                    </span>
+                    <span class="error-text">{{ $message }}</span>
                 @enderror
 
             </div>
 
-
             {{-- RATING --}}
             <div class="form-group">
 
-                <label for="rating">
-                    Rating
-                </label>
+                <label for="rating">Rating</label>
 
                 <input
                     type="number"
@@ -378,15 +442,12 @@
                 >
 
                 @error('rating')
-                    <span class="error-text">
-                        {{ $message }}
-                    </span>
+                    <span class="error-text">{{ $message }}</span>
                 @enderror
 
             </div>
 
         </div>
-
 
         {{-- GAMBAR --}}
         <div class="form-group">
@@ -411,13 +472,10 @@
             >
 
             @error('image')
-                <span class="error-text">
-                    {{ $message }}
-                </span>
+                <span class="error-text">{{ $message }}</span>
             @enderror
 
         </div>
-
 
         <div class="form-actions">
 
@@ -441,14 +499,19 @@
 
 </div>
 
-
 <script>
     const imageInput = document.getElementById('image');
     const imagePreview = document.getElementById('imagePreview');
 
-    imageInput.addEventListener('change', function () {
+    let previewUrl = null;
 
+    imageInput.addEventListener('change', function () {
         const file = this.files[0];
+
+        if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+            previewUrl = null;
+        }
 
         if (!file) {
             imagePreview.style.display = 'none';
@@ -456,9 +519,15 @@
             return;
         }
 
-        imagePreview.src = URL.createObjectURL(file);
-        imagePreview.style.display = 'block';
+        if (!file.type.startsWith('image/')) {
+            imagePreview.style.display = 'none';
+            imagePreview.src = '';
+            return;
+        }
 
+        previewUrl = URL.createObjectURL(file);
+        imagePreview.src = previewUrl;
+        imagePreview.style.display = 'block';
     });
 </script>
 

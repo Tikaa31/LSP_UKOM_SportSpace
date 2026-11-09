@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -26,23 +27,85 @@
             padding: 24px;
         }
 
+        /* HEADER SPORTSPACE */
         .admin-header {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
             align-items: center;
             gap: 20px;
+            padding: 18px 22px;
             margin-bottom: 25px;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            box-shadow: 0 5px 18px rgba(15, 23, 42, .03);
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            justify-self: start;
+            gap: 11px;
+            min-width: 0;
+            color: #1e293b;
+            text-decoration: none;
+        }
+
+        .brand img {
+            display: block;
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            object-fit: contain;
+        }
+
+        .brand span {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: .3px;
+            white-space: nowrap;
+        }
+
+        .admin-title {
+            min-width: 0;
+            text-align: center;
         }
 
         .admin-title h1 {
             margin: 0 0 6px;
             font-size: 28px;
+            letter-spacing: -.5px;
         }
 
         .admin-title p {
             margin: 0;
             color: #64748b;
             line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: end;
+            min-height: 42px;
+            padding: 10px 18px;
+            border: 1px solid #dbeafe;
+            border-radius: 11px;
+            background: #ffffff;
+            color: #2563eb;
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            white-space: nowrap;
+            transition: .2s ease;
+        }
+
+        .back-button:hover {
+            background: #eff6ff;
+            border-color: #c9dcff;
+            transform: translateY(-1px);
         }
 
         .add-button {
@@ -282,12 +345,24 @@
             }
 
             .admin-header {
-                flex-direction: column;
-                align-items: stretch;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 14px;
+                padding: 16px;
+            }
+
+            .admin-title {
+                grid-column: 1 / -1;
+                grid-row: 2;
+                text-align: left;
             }
 
             .admin-title h1 {
                 font-size: 24px;
+            }
+
+            .back-button {
+                grid-column: 2;
+                grid-row: 1;
             }
 
             .add-button {
@@ -306,6 +381,38 @@
         @media (max-width: 420px) {
             .admin-page {
                 padding: 12px;
+            }
+
+            .admin-header {
+                gap: 10px;
+                padding: 13px;
+            }
+
+            .brand {
+                gap: 7px;
+            }
+
+            .brand img {
+                width: 38px;
+                height: 38px;
+            }
+
+            .brand span {
+                font-size: 15px;
+            }
+
+            .back-button {
+                min-height: 38px;
+                padding: 9px 12px;
+                font-size: 13px;
+            }
+
+            .admin-title h1 {
+                font-size: 22px;
+            }
+
+            .admin-title p {
+                font-size: 13px;
             }
 
             .venue-card-info {
@@ -331,26 +438,40 @@
 
 <div class="admin-page">
 
-    <div class="admin-header">
+    <header class="admin-header">
+
+        <a href="{{ route('admin.dashboard') }}"
+           class="brand"
+           aria-label="SPORTSPACE - Dashboard Admin">
+            <img
+                src="{{ asset('image/logosportspace.png') }}"
+                alt="Logo SPORTSPACE"
+            >
+            <span>SPORTSPACE</span>
+        </a>
 
         <div class="admin-title">
             <h1>Manajemen Lapangan</h1>
             <p>Kelola semua lapangan SPORTSPACE dari halaman admin.</p>
         </div>
 
+        <a href="{{ route('admin.dashboard') }}" class="back-button">
+            Kembali
+        </a>
+
+    </header>
+
+    <div style="margin-bottom: 20px;">
         <a href="{{ route('admin.venues.create') }}" class="add-button">
             + Tambah Lapangan
         </a>
-
     </div>
-
 
     @if (session('success'))
         <div class="success-message">
             {{ session('success') }}
         </div>
     @endif
-
 
     {{-- DESKTOP --}}
     <div class="table-card">
@@ -440,7 +561,9 @@
 
                     <tr>
                         <td colspan="7" class="empty-state">
-                            Belum ada lapangan. Klik <strong>+ Tambah Lapangan</strong> untuk menambahkan.
+                            Belum ada lapangan. Klik
+                            <strong>+ Tambah Lapangan</strong>
+                            untuk menambahkan.
                         </td>
                     </tr>
 
@@ -451,7 +574,6 @@
         </table>
 
     </div>
-
 
     {{-- MOBILE --}}
     <div class="venue-cards">
@@ -488,7 +610,6 @@
 
                     </div>
 
-
                     <div class="venue-card-info">
 
                         <div class="info-item">
@@ -500,7 +621,6 @@
                             </span>
                         </div>
 
-
                         <div class="info-item">
                             <span class="info-label">Harga / Jam</span>
 
@@ -511,7 +631,6 @@
 
                     </div>
 
-
                     <div class="venue-card-actions">
 
                         <a
@@ -520,7 +639,6 @@
                         >
                             Edit Lapangan
                         </a>
-
 
                         <form
                             action="{{ route('admin.venues.destroy', $venue) }}"

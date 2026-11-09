@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Pesanan Saya - SPORTSPACE</title>
 
     <style>
@@ -32,7 +31,7 @@
             font-family: Arial, Helvetica, sans-serif;
             background: var(--background);
             color: var(--text);
-            padding-bottom: 90px;
+            padding-bottom: 40px;
         }
 
         .orders-app {
@@ -40,63 +39,94 @@
             max-width: 850px;
             min-height: 100vh;
             margin: 0 auto;
-            background: var(--background);
         }
 
-        /* =========================
-           HEADER
-        ========================= */
-
+        /* HEADER SPORTSPACE */
         .page-header {
             position: sticky;
-            top: 0;
+            top: 12px;
             z-index: 20;
-
             display: flex;
             align-items: center;
-            gap: 14px;
-
-            padding: 14px 20px;
-
-            background: rgba(255, 255, 255, 0.97);
-            border-bottom: 1px solid var(--border);
+            justify-content: space-between;
+            gap: 16px;
+            width: calc(100% - 32px);
+            margin: 12px auto 0;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, .98);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, .06);
             backdrop-filter: blur(12px);
         }
 
-        .back-button {
+        .header-brand {
             display: flex;
             align-items: center;
-            justify-content: center;
-
-            width: 42px;
-            height: 42px;
-            flex-shrink: 0;
-
-            border-radius: 13px;
-            background: #f1f5f9;
-
-            color: var(--text);
-            text-decoration: none;
-
-            font-size: 24px;
-            font-weight: bold;
-
-            transition: 0.2s ease;
+            gap: 13px;
+            min-width: 0;
         }
 
-        .back-button:hover {
-            background: var(--primary-light);
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            flex-shrink: 0;
+            object-fit: contain;
+        }
+
+        .header-text {
+            min-width: 0;
+        }
+
+        .brand-name {
+            margin-bottom: 3px;
             color: var(--primary);
-            transform: translateX(-2px);
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
         }
 
         .page-header h1 {
-            font-size: clamp(19px, 4vw, 22px);
+            color: var(--text);
+            font-size: clamp(18px, 3vw, 22px);
+            line-height: 1.25;
         }
 
-        /* =========================
-           CONTENT
-        ========================= */
+        .header-caption {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 42px;
+            flex-shrink: 0;
+            padding: 0 15px;
+            border: 1px solid #dbeafe;
+            border-radius: 12px;
+            background: var(--primary-light);
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+        .back-button:hover {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .back-button svg {
+            width: 18px;
+            height: 18px;
+        }
 
         .content {
             width: 100%;
@@ -107,20 +137,34 @@
             margin-bottom: 20px;
             color: var(--muted);
             font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .alert {
+            padding: 13px 15px;
+            margin-bottom: 16px;
+            border-radius: 12px;
+            font-size: 14px;
             line-height: 1.5;
         }
 
-        /* =========================
-           FILTER STATUS
-        ========================= */
+        .alert-success {
+            background: #ecfdf5;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+        }
+
+        .alert-error {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
 
         .status-tabs {
             display: flex;
             gap: 10px;
-
             margin-bottom: 22px;
             padding-bottom: 4px;
-
             overflow-x: auto;
             scrollbar-width: none;
         }
@@ -131,48 +175,30 @@
 
         .status-tab {
             flex-shrink: 0;
-
             padding: 10px 16px;
-
             border: 1px solid var(--border);
             border-radius: 12px;
-
             background: var(--card);
             color: var(--muted);
-
             font-family: inherit;
             font-size: 13px;
             font-weight: 700;
-
             cursor: pointer;
-            transition: 0.2s ease;
-        }
-
-        .status-tab:hover {
-            border-color: var(--primary);
-            color: var(--primary);
         }
 
         .status-tab.active {
             background: var(--primary);
             border-color: var(--primary);
-            color: #ffffff;
+            color: #fff;
         }
-
-        /* =========================
-           ORDER CARD
-        ========================= */
 
         .order-card {
             margin-bottom: 16px;
-
             overflow: hidden;
-
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 20px;
-
-            box-shadow: 0 8px 25px rgba(15, 23, 42, 0.05);
+            box-shadow: 0 8px 25px rgba(15, 23, 42, .05);
         }
 
         .order-main {
@@ -185,7 +211,6 @@
             width: 105px;
             height: 105px;
             flex-shrink: 0;
-
             overflow: hidden;
             border-radius: 15px;
             background: #e2e8f0;
@@ -202,50 +227,27 @@
             min-width: 0;
         }
 
-        .order-top {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
         .order-info h2 {
             margin-bottom: 7px;
-
-            overflow: hidden;
-
+            overflow-wrap: anywhere;
             font-size: 17px;
             line-height: 1.4;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
 
         .order-location {
             margin-bottom: 10px;
-
-            overflow: hidden;
-
             color: var(--muted);
             font-size: 13px;
-
-            text-overflow: ellipsis;
-            white-space: nowrap;
+            overflow-wrap: anywhere;
         }
-
-        /* STATUS */
 
         .status {
             display: inline-flex;
             align-items: center;
-
             padding: 6px 10px;
-
             border-radius: 20px;
-
             font-size: 11px;
             font-weight: 800;
-
-            white-space: nowrap;
         }
 
         .status.pending {
@@ -263,14 +265,9 @@
             color: var(--danger);
         }
 
-        /* =========================
-           DETAIL
-        ========================= */
-
         .order-details {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
         }
@@ -286,33 +283,24 @@
 
         .detail-label {
             margin-bottom: 6px;
-
             color: var(--muted);
             font-size: 10px;
             font-weight: 700;
         }
 
         .detail-value {
-            overflow: hidden;
-
+            overflow-wrap: anywhere;
             color: var(--text);
             font-size: 13px;
             font-weight: 800;
-
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
-
-        /* =========================
-           FOOTER CARD
-        ========================= */
 
         .order-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 15px;
-
+            flex-wrap: wrap;
+            gap: 12px;
             padding: 15px 16px;
         }
 
@@ -328,38 +316,61 @@
             font-weight: 900;
         }
 
-        .detail-button {
-            flex-shrink: 0;
+        .order-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
 
+        .detail-button,
+        .cancel-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 40px;
             padding: 10px 14px;
-
-            border: 1px solid var(--primary);
             border-radius: 11px;
-
-            background: var(--primary-light);
-            color: var(--primary);
-
+            font-family: inherit;
             font-size: 12px;
             font-weight: 800;
-
+            text-decoration: none;
             cursor: pointer;
-            transition: 0.2s ease;
+            transition: .2s ease;
+        }
+
+        .detail-button {
+            border: 1px solid var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
         }
 
         .detail-button:hover {
             background: var(--primary);
-            color: #ffffff;
+            color: #fff;
         }
 
-        /* =========================
-           EMPTY STATE
-        ========================= */
+        .cancel-button {
+            border: 1px solid #fecaca;
+            background: #fef2f2;
+            color: var(--danger);
+        }
+
+        .cancel-button:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+
+        .cancel-note {
+            width: 100%;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
 
         .empty-orders {
             padding: 55px 20px;
-
             text-align: center;
-
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 20px;
@@ -378,7 +389,6 @@
         .empty-orders p {
             max-width: 400px;
             margin: 0 auto 22px;
-
             color: var(--muted);
             font-size: 14px;
             line-height: 1.6;
@@ -388,31 +398,15 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-
             min-height: 46px;
             padding: 0 20px;
-
             border-radius: 13px;
-
             background: var(--primary);
-            color: #ffffff;
-
+            color: #fff;
             text-decoration: none;
-
             font-size: 14px;
             font-weight: 800;
-
-            transition: 0.2s ease;
         }
-
-        .home-button:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-        }
-
-        /* =========================
-           TABLET
-        ========================= */
 
         @media (min-width: 600px) {
             .content {
@@ -420,7 +414,7 @@
             }
 
             .page-header {
-                padding: 16px 28px;
+                padding: 16px 22px;
             }
 
             .order-main {
@@ -428,17 +422,52 @@
             }
         }
 
-        /* =========================
-           MOBILE
-        ========================= */
-
         @media (max-width: 480px) {
             .content {
                 padding: 14px;
             }
 
             .page-header {
-                padding: 13px 14px;
+                top: 8px;
+                width: calc(100% - 20px);
+                margin-top: 8px;
+                padding: 12px;
+                gap: 8px;
+                border-radius: 16px;
+            }
+
+            .header-brand {
+                gap: 9px;
+            }
+
+            .brand-logo {
+                width: 38px;
+                height: 38px;
+            }
+
+            .brand-name {
+                font-size: 9px;
+                letter-spacing: 1px;
+            }
+
+            .page-header h1 {
+                font-size: 16px;
+            }
+
+            .header-caption {
+                font-size: 10px;
+            }
+
+            .back-button {
+                min-height: 38px;
+                gap: 5px;
+                padding: 0 9px;
+                font-size: 11px;
+            }
+
+            .back-button svg {
+                width: 16px;
+                height: 16px;
             }
 
             .order-main {
@@ -458,11 +487,6 @@
 
             .order-location {
                 font-size: 12px;
-            }
-
-            .status {
-                padding: 5px 8px;
-                font-size: 10px;
             }
 
             .order-details {
@@ -489,14 +513,20 @@
                 font-size: 16px;
             }
 
+            .order-actions {
+                width: 100%;
+            }
+
+            .order-actions > * {
+                flex: 1;
+            }
+
+            .cancel-button,
             .detail-button {
-                padding: 9px 11px;
+                padding: 10px;
+                text-align: center;
             }
         }
-
-        /* =========================
-           HP KECIL
-        ========================= */
 
         @media (max-width: 360px) {
             .order-main {
@@ -507,260 +537,270 @@
                 width: 100%;
                 height: 150px;
             }
-
-            .order-info h2,
-            .order-location {
-                white-space: normal;
-            }
-
-            .order-footer {
-                align-items: flex-start;
-                flex-direction: column;
-            }
-
-            .detail-button {
-                width: 100%;
-            }
         }
-
     </style>
 </head>
 
 <body>
-
 <div class="orders-app">
 
-    {{-- HEADER --}}
     <header class="page-header">
+        <div class="header-brand">
+            <img
+                src="{{ asset('image/logosportspace.png') }}"
+                alt="SPORTSPACE"
+                class="brand-logo"
+            >
 
-        <a
-            href="{{ route('dashboard') }}"
-            class="back-button"
-        >
-            ←
+            <div class="header-text">
+                <div class="brand-name">SPORTSPACE</div>
+                <h1>Pesanan Saya</h1>
+                <p class="header-caption">
+                    Pantau status dan detail booking kamu
+                </p>
+            </div>
+        </div>
+
+        <a href="{{ route('dashboard') }}" class="back-button">
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke="currentColor"
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round"
+                 aria-hidden="true">
+                <path d="M19 12H5"></path>
+                <path d="M12 19l-7-7 7-7"></path>
+            </svg>
+            <span>Kembali</span>
         </a>
-
-        <h1>Pesanan Saya</h1>
-
     </header>
 
-
     <main class="content">
-
         <p class="page-description">
             Lihat semua pesanan dan status booking lapangan kamu di sini.
         </p>
 
+        @if (session('success'))
+            <div class="alert alert-success" role="alert">
+                {{ session('success') }}
+            </div>
+        @endif
 
-        {{-- FILTER --}}
+        @if (session('error'))
+            <div class="alert alert-error" role="alert">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="alert alert-error" role="alert">
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            </div>
+        @endif
+
         <div class="status-tabs">
-
-            <button
-                type="button"
-                class="status-tab active"
-                data-filter="all"
-            >
+            <button type="button" class="status-tab active" data-filter="all">
                 Semua
             </button>
 
-            <button
-                type="button"
-                class="status-tab"
-                data-filter="pending"
-            >
+            <button type="button" class="status-tab" data-filter="pending">
                 Menunggu
             </button>
 
-            <button
-                type="button"
-                class="status-tab"
-                data-filter="confirmed"
-            >
+            <button type="button" class="status-tab" data-filter="confirmed">
                 Dikonfirmasi
             </button>
 
-            <button
-                type="button"
-                class="status-tab"
-                data-filter="cancelled"
-            >
+            <button type="button" class="status-tab" data-filter="cancelled">
                 Dibatalkan
             </button>
-
         </div>
 
-
-        {{-- LIST PESANAN --}}
         <div id="ordersContainer">
-
             @forelse ($bookings as $booking)
+                @php
+                    $paymentStatus = $booking->payment_status ?? 'unpaid';
 
-                <div
-                    class="order-card"
-                    data-status="{{ $booking->status }}"
-                >
+                    $displayStatus = $booking->status;
 
+                    if (
+                        $booking->status !== 'cancelled'
+                        && $paymentStatus === 'paid'
+                    ) {
+                        $displayStatus = 'confirmed';
+                    }
+
+                    $statusLabels = [
+                        'pending' => 'Menunggu Pembayaran',
+                        'confirmed' => 'Dikonfirmasi',
+                        'cancelled' => 'Dibatalkan',
+                    ];
+
+                    $statusLabel = $statusLabels[$displayStatus]
+                        ?? ucfirst($displayStatus);
+
+                    $startAt = \Carbon\Carbon::parse(
+                        $booking->booking_date
+                    )->setTimeFromTimeString($booking->start_time);
+
+                    $now = now();
+
+                    /*
+                     * Booking lunas:
+                     * hanya bisa dibatalkan lebih dari 24 jam sebelum mulai.
+                     *
+                     * Booking belum lunas:
+                     * bisa dibatalkan sebelum jadwal dimulai.
+                     */
+                    $canCancel = false;
+
+                    if (
+                        $booking->status !== 'cancelled'
+                        && $paymentStatus === 'paid'
+                        && in_array(
+                            $booking->status,
+                            ['pending', 'confirmed'],
+                            true
+                        )
+                    ) {
+                        $canCancel = $now->lt(
+                            $startAt->copy()->subHours(24)
+                        );
+                    } elseif (
+                        $booking->status === 'pending'
+                        && in_array(
+                            $paymentStatus,
+                            [
+                                'unpaid',
+                                'waiting_verification',
+                                'rejected'
+                            ],
+                            true
+                        )
+                    ) {
+                        $canCancel = $now->lt($startAt);
+                    }
+                @endphp
+
+                <div class="order-card" data-status="{{ $displayStatus }}">
                     <div class="order-main">
-
                         <div class="order-image">
-
                             <img
                                 src="{{ asset($booking->venue->image) }}"
                                 alt="{{ $booking->venue->name }}"
+                                loading="lazy"
+                                onerror="this.style.display='none';"
                             >
-
                         </div>
-
 
                         <div class="order-info">
+                            <h2>{{ $booking->venue->name }}</h2>
 
-                            <div class="order-top">
+                            <p class="order-location">
+                                📍 {{ $booking->venue->location }}
+                            </p>
 
-                                <div>
-
-                                    <h2>
-                                        {{ $booking->venue->name }}
-                                    </h2>
-
-                                    <p class="order-location">
-                                        📍 {{ $booking->venue->location }}
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-
-                            <span class="status {{ $booking->status }}">
-
-                                @if ($booking->status === 'pending')
-                                    Menunggu Pembayaran
-                                @elseif ($booking->status === 'confirmed')
-                                    Dikonfirmasi
-                                @elseif ($booking->status === 'cancelled')
-                                    Dibatalkan
-                                @else
-                                    {{ ucfirst($booking->status) }}
-                                @endif
-
+                            <span class="status {{ $displayStatus }}">
+                                {{ $statusLabel }}
                             </span>
-
                         </div>
-
                     </div>
 
-
                     <div class="order-details">
-
                         <div class="detail-item">
-
-                            <div class="detail-label">
-                                TANGGAL
-                            </div>
-
+                            <div class="detail-label">TANGGAL</div>
                             <div class="detail-value">
                                 {{ \Carbon\Carbon::parse($booking->booking_date)->translatedFormat('d M Y') }}
                             </div>
-
                         </div>
 
-
                         <div class="detail-item">
-
-                            <div class="detail-label">
-                                JAM
-                            </div>
-
+                            <div class="detail-label">JAM</div>
                             <div class="detail-value">
                                 {{ \Carbon\Carbon::parse($booking->start_time)->format('H:i') }}
                             </div>
-
                         </div>
 
-
                         <div class="detail-item">
-
-                            <div class="detail-label">
-                                DURASI
-                            </div>
-
+                            <div class="detail-label">DURASI</div>
                             <div class="detail-value">
                                 {{ $booking->duration }} Jam
                             </div>
-
                         </div>
-
                     </div>
 
-
                     <div class="order-footer">
-
                         <div>
-
-                            <div class="total-label">
-                                Total Pembayaran
-                            </div>
-
+                            <div class="total-label">Total Pembayaran</div>
                             <div class="total-price">
                                 Rp{{ number_format($booking->total_price, 0, ',', '.') }}
                             </div>
-
                         </div>
 
+                        <div class="order-actions">
+                            <a
+                                href="{{ route('bookings.show', $booking) }}"
+                                class="detail-button"
+                            >
+                                Detail
+                            </a>
 
-                       <a href="{{ route('bookings.show', $booking) }}"
-                          class="detail-button"
-                          style="text-decoration: none;"
-                       >
-                         Detail
-                       </a>
+                            @if ($canCancel)
+                                <form
+                                    action="{{ route('bookings.cancel', $booking) }}"
+                                    method="POST"
+                                    class="cancel-form"
+                                    onsubmit="return confirm('Yakin ingin membatalkan booking ini?{{ $paymentStatus === 'paid' ? '\n\nPembatalan tidak otomatis mengembalikan dana. Silakan hubungi admin untuk proses pengembalian dana.' : '' }}');"
+                                >
+                                    @csrf
+                                    @method('PATCH')
 
+                                    <button type="submit" class="cancel-button">
+                                        Batalkan Booking
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+
+                        @if ($canCancel && $paymentStatus === 'paid')
+                            <p class="cancel-note">
+                                Pembatalan hanya tersedia lebih dari 24 jam
+                                sebelum jadwal. Pengembalian dana diproses terpisah.
+                            </p>
+                        @elseif ($canCancel)
+                            <p class="cancel-note">
+                                Booking dapat dibatalkan sebelum jadwal dimulai.
+                            </p>
+                        @endif
                     </div>
-
                 </div>
-
             @empty
-
                 <div class="empty-orders">
-
-                    <div class="empty-icon">
-                        📋
-                    </div>
-
+                    <div class="empty-icon">📋</div>
                     <h2>Belum Ada Pesanan</h2>
-
                     <p>
                         Kamu belum memiliki pesanan. Yuk cari lapangan
                         dan lakukan booking sekarang!
                     </p>
-
-                    <a
-                        href="{{ route('dashboard') }}"
-                        class="home-button"
-                    >
+                    <a href="{{ route('dashboard') }}" class="home-button">
                         Cari Lapangan
                     </a>
-
                 </div>
-
             @endforelse
-
         </div>
-
     </main>
-
 </div>
-
 
 <script>
     const statusTabs = document.querySelectorAll('.status-tab');
     const orderCards = document.querySelectorAll('.order-card');
 
-    statusTabs.forEach(function(tab) {
-
-        tab.addEventListener('click', function() {
-
-            statusTabs.forEach(function(item) {
+    statusTabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            statusTabs.forEach(function (item) {
                 item.classList.remove('active');
             });
 
@@ -768,23 +808,14 @@
 
             const filter = this.dataset.filter;
 
-            orderCards.forEach(function(card) {
-
-                if (
-                    filter === 'all' ||
-                    card.dataset.status === filter
-                ) {
-                    card.style.display = 'block';
-                } else {
-                    card.style.display = 'none';
-                }
-
+            orderCards.forEach(function (card) {
+                card.style.display =
+                    filter === 'all' || card.dataset.status === filter
+                        ? 'block'
+                        : 'none';
             });
-
         });
-
     });
 </script>
-
 </body>
 </html>

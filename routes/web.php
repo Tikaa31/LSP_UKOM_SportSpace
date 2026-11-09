@@ -1,3 +1,4 @@
+
 <?php
 
 use Illuminate\Support\Facades\Route;
@@ -6,32 +7,31 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\VenueController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RefundController;
+use App\Http\Controllers\JadwalController;
 
 use App\Http\Controllers\Admin\VenueController as AdminVenueController;
 use App\Http\Controllers\Admin\SportController as AdminSportController;
-
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\Admin\PaymentVerificationController;
+use App\Http\Controllers\Admin\RefundController as AdminRefundController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 
 // Halaman awal
 Route::get('/', function () {
     return redirect()->route('dashboard');
 });
 
+// Semua route harus login dan terverifikasi
+Route::middleware(['auth', 'verified'])->group(function () {
 
-// Semua route di bawah harus login
-Route::middleware([
-    'auth',
-    'verified',
-])->group(function () {
-
-    // Dashboard
+    // Dashboard pengguna
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
-
 
     // Detail lapangan
     Route::get('/venues/{venue}', [VenueController::class, 'show'])
         ->name('venues.show');
-
 
     // Booking lapangan
     Route::get('/venues/{venue}/booking', [BookingController::class, 'create'])
@@ -40,59 +40,144 @@ Route::middleware([
     Route::post('/venues/{venue}/booking', [BookingController::class, 'store'])
         ->name('bookings.store');
 
-    Route::get('/bookings/{booking}/success', [BookingController::class, 'success'])
-        ->name('bookings.success');
+    // Booking berhasil
+    Route::get('/bookings/{booking}/success', [
+        BookingController::class,
+        'success',
+    ])->name('bookings.success');
 
+    // Daftar booking pengguna
     Route::get('/bookings', [BookingController::class, 'index'])
         ->name('bookings.index');
 
+    // Daftar pesanan
     Route::get('/orders', [BookingController::class, 'orders'])
         ->name('bookings.orders');
 
+    // Detail booking
     Route::get('/bookings/{booking}', [BookingController::class, 'show'])
         ->name('bookings.show');
 
+    // Batalkan booking
+    Route::patch('/bookings/{booking}/cancel', [
+        BookingController::class,
+        'cancel',
+    ])->name('bookings.cancel');
 
-    // Profil
-    Route::get('/profile', [ProfileController::class, 'edit'])
-        ->name('profile.edit');
+    // Hapus transaksi yang dibatalkan
+    Route::delete('/bookings/{booking}', [
+        BookingController::class,
+        'destroy',
+    ])->name('bookings.destroy');
 
-    Route::patch('/profile', [ProfileController::class, 'update'])
-        ->name('profile.update');
+    // Upload bukti pembayaran
+    Route::post('/bookings/{booking}/payment-proof', [
+        BookingController::class,
+        'uploadPaymentProof',
+    ])->name('bookings.payment-proof');
 
-    Route::delete('/profile', [ProfileController::class, 'destroy'])
-        ->name('profile.destroy');
+    // Refund pengguna
+    Route::get('/refunds', [
+        RefundController::class,
+        'index',
+    ])->name('refunds.index');
+
+    Route::post('/bookings/{booking}/refund', [
+        RefundController::class,
+        'store',
+    ])->name('refunds.store');
+
+    // Bukti transfer refund pengguna
+    Route::get('/refunds/{refund}/proof', [
+        RefundController::class,
+        'proof',
+    ])->name('refunds.proof');
+
+    // Profil pengguna
+    Route::get('/profile', [
+        ProfileController::class,
+        'edit',
+    ])->name('profile.edit');
+
+    Route::patch('/profile', [
+        ProfileController::class,
+        'update',
+    ])->name('profile.update');
+
+    Route::delete('/profile', [
+        ProfileController::class,
+        'destroy',
+    ])->name('profile.destroy');
 
 
-    // Shop
-    Route::get('/shop', function () {
-        return view('shop.index');
-    })->name('shop.index');
+    // Jadwal lapangan
+    Route::get('/jadwal', [JadwalController::class, 'index'])
+        ->name('jadwal.index');
 
-
-    // Halaman admin
-    // Hanya user dengan is_admin = true yang bisa akses
+    // ==========================================
+    // ADMIN SPORTSPACE
+    // ==========================================
     Route::prefix('admin')
         ->name('admin.')
         ->middleware('admin')
         ->group(function () {
 
-            // CRUD lapangan
-            Route::resource(
-                'venues',
-                AdminVenueController::class
-            );
+            // Dashboard Admin
+            Route::get('/dashboard', [
+                AdminDashboardController::class,
+                'index',
+            ])->name('dashboard');
 
-            // CRUD olahraga
-            Route::resource(
-                'sports',
-                AdminSportController::class
-            );
+            // Kelola lapangan
+            Route::resource('venues', AdminVenueController::class);
 
+            // Kelola olahraga
+            Route::resource('sports', AdminSportController::class);
+
+            // Kelola booking
+            Route::get('/bookings', [
+                AdminBookingController::class,
+                'index',
+            ])->name('bookings.index');
+
+            // Verifikasi pembayaran
+            Route::get('/payments', [
+                PaymentVerificationController::class,
+                'index',
+            ])->name('payments.index');
+
+            Route::patch('/payments/{booking}/verify', [
+                PaymentVerificationController::class,
+                'verify',
+            ])->name('payments.verify');
+
+            Route::patch('/payments/{booking}/reject', [
+                PaymentVerificationController::class,
+                'reject',
+            ])->name('payments.reject');
+
+            // Kelola refund
+            Route::get('/refunds', [
+                AdminRefundController::class,
+                'index',
+            ])->name('refunds.index');
+
+            Route::patch('/refunds/{refund}/approve', [
+                AdminRefundController::class,
+                'approve',
+            ])->name('refunds.approve');
+
+            Route::patch('/refunds/{refund}/reject', [
+                AdminRefundController::class,
+                'reject',
+            ])->name('refunds.reject');
+
+            Route::patch('/refunds/{refund}/mark-refunded', [
+                AdminRefundController::class,
+                'markRefunded',
+            ])->name('refunds.mark-refunded');
         });
-
 });
 
-
-// Route login dan register
+// Authentication routes
 require __DIR__.'/auth.php';

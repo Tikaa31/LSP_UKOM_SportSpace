@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Booking;
+use App\Models\Sport;
 
 class Venue extends Model
 {
@@ -15,8 +17,19 @@ class Venue extends Model
         'image',
     ];
 
+    /**
+     * Relasi ke jenis olahraga.
+     */
     public function sport()
     {
         return $this->belongsTo(Sport::class);
+    }
+
+    /**
+     * Relasi ke seluruh booking milik lapangan ini.
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -35,21 +36,47 @@
             margin-bottom: 24px;
         }
 
+        /* Tombol kembali responsif */
         .back-button {
-            width: 44px;
-            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            width: 42px;
+            height: 42px;
+            min-width: 42px;
+            flex-shrink: 0;
+            padding: 0;
             border: none;
             border-radius: 12px;
             background: #ffffff;
             color: #172033;
-            font-size: 24px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(15, 23, 42, 0.06);
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .back-button svg {
+            display: block;
+            width: 22px;
+            height: 22px;
+            flex-shrink: 0;
+        }
+
+        .back-button:hover {
+            background: #eff6ff;
+            color: #2563eb;
+        }
+
+        .back-button:focus-visible {
+            outline: 3px solid rgba(37, 99, 235, 0.35);
+            outline-offset: 3px;
         }
 
         .profile-header h1 {
             margin: 0;
             font-size: 24px;
+            line-height: 1.3;
         }
 
         .profile-user-card {
@@ -220,6 +247,10 @@
                 padding: 16px;
             }
 
+            .profile-header {
+                gap: 12px;
+            }
+
             .profile-header h1 {
                 font-size: 21px;
             }
@@ -257,14 +288,27 @@
                 type="button"
                 class="back-button"
                 onclick="window.history.back()"
+                aria-label="Kembali"
+                title="Kembali"
             >
-                ←
+                <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                    focusable="false"
+                >
+                    <path d="M19 12H5"></path>
+                    <path d="M12 19l-7-7 7-7"></path>
+                </svg>
             </button>
 
             <h1>Profil Saya</h1>
 
         </div>
-
 
         {{-- Informasi akun --}}
         <section class="profile-user-card">
@@ -279,7 +323,6 @@
 
         </section>
 
-
         {{-- Ubah profil --}}
         <section class="profile-section">
 
@@ -287,14 +330,12 @@
 
         </section>
 
-
         {{-- Ubah password --}}
         <section class="profile-section">
 
             @include('profile.partials.update-password-form')
 
         </section>
-
 
         {{-- Logout --}}
         <section class="profile-section">
@@ -317,7 +358,6 @@
             </form>
 
         </section>
-
 
         {{-- Hapus akun --}}
         <section class="profile-section">
