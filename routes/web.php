@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\Admin\PaymentVerificationController;
 use App\Http\Controllers\Admin\RefundController as AdminRefundController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\VenueMaintenanceController;
 
 // Halaman awal
 Route::get('/', function () {
@@ -37,6 +38,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/venues/{venue}/booking', [BookingController::class, 'create'])
         ->name('bookings.create');
 
+    // Cek ketersediaan jadwal booking
+    Route::get('/venues/{venue}/availability', [
+        BookingController::class,
+        'availability',
+    ])->name('bookings.availability');
+
+    // Simpan booking
     Route::post('/venues/{venue}/booking', [BookingController::class, 'store'])
         ->name('bookings.store');
 
@@ -109,7 +117,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         'destroy',
     ])->name('profile.destroy');
 
-
     // Jadwal lapangan
     Route::get('/jadwal', [JadwalController::class, 'index'])
         ->name('jadwal.index');
@@ -130,6 +137,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             // Kelola lapangan
             Route::resource('venues', AdminVenueController::class);
+
+            // Kelola maintenance / perbaikan lapangan
+            Route::get('/venues/{venue}/maintenance', [
+                VenueMaintenanceController::class,
+                'index',
+            ])->name('venues.maintenance.index');
+
+            Route::post('/venues/{venue}/maintenance', [
+                VenueMaintenanceController::class,
+                'store',
+            ])->name('venues.maintenance.store');
+
+            Route::delete('/venue-maintenances/{maintenance}', [
+                VenueMaintenanceController::class,
+                'destroy',
+            ])->name('venue-maintenances.destroy');
 
             // Kelola olahraga
             Route::resource('sports', AdminSportController::class);
@@ -178,6 +201,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             ])->name('refunds.mark-refunded');
         });
 });
+
+// Cek status login dan admin sementara
+Route::get('/cek-admin', function () {
+    return [
+        'login' => auth()->check(),
+        'user_id' => auth()->id(),
+        'email' => auth()->user()?->email,
+        'is_admin' => auth()->user()?->is_admin,
+    ];
+})->middleware('auth');
 
 // Authentication routes
 require __DIR__.'/auth.php';

@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -9,7 +10,6 @@
 
     <link rel="stylesheet" href="{{ asset('dashboard.css') }}">
 
-    {{-- Tampilan ikon olahraga yang diunggah dari halaman admin --}}
     <style>
         .sport-emoji {
             display: flex;
@@ -25,6 +25,17 @@
             max-width: 80%;
             max-height: 80%;
             object-fit: contain;
+        }
+
+        /* Badge status lapangan */
+        .venue-badge.maintenance-badge {
+            background: #dc2626;
+            color: #ffffff;
+        }
+
+        .venue-badge.scheduled-badge {
+            background: #f59e0b;
+            color: #ffffff;
         }
     </style>
 </head>
@@ -338,6 +349,24 @@
 
             @forelse ($venues as $venue)
 
+                @php
+                    $today = now()->toDateString();
+
+                    // Maintenance yang sedang berlangsung
+                    $activeMaintenance = $venue->maintenances->first(function ($maintenance) use ($today) {
+                        return $maintenance->start_date->toDateString() <= $today
+                            && $maintenance->end_date->toDateString() >= $today;
+                    });
+
+                    // Maintenance yang akan datang
+                    $upcomingMaintenance = $venue->maintenances
+                        ->filter(function ($maintenance) use ($today) {
+                            return $maintenance->start_date->toDateString() > $today;
+                        })
+                        ->sortBy('start_date')
+                        ->first();
+                @endphp
+
                 <a
                     href="{{ route('venues.show', $venue) }}"
                     class="venue"
@@ -371,7 +400,30 @@
 
                         @endif
 
-                        <span class="venue-badge">Lapangan</span>
+                        {{-- BADGE STATUS LAPANGAN --}}
+                        @if ($activeMaintenance)
+
+                            <span
+                                class="venue-badge maintenance-badge"
+                                title="{{ $activeMaintenance->reason }}"
+                            >
+                                Dalam Perbaikan
+                            </span>
+
+                        @elseif ($upcomingMaintenance)
+
+                            <span
+                                class="venue-badge scheduled-badge"
+                                title="Maintenance: {{ $upcomingMaintenance->reason }}"
+                            >
+                                Terjadwal
+                            </span>
+
+                        @else
+
+                            <span class="venue-badge">Tersedia</span>
+
+                        @endif
 
                         <button
                             type="button"

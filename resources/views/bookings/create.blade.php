@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -7,10 +6,7 @@
     <title>Booking {{ $venue->name }} - SPORTSPACE</title>
 
     <style>
-        * {
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         :root {
             --primary: #2563eb;
@@ -23,9 +19,7 @@
             --border: #e5eaf1;
         }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         body {
             margin: 0;
@@ -35,9 +29,7 @@
             color: var(--text);
         }
 
-        button {
-            font-family: inherit;
-        }
+        button { font-family: inherit; }
 
         .booking-page {
             width: 100%;
@@ -77,19 +69,9 @@
             transition: background 0.2s ease, transform 0.2s ease;
         }
 
-        .back-button svg {
-            display: block;
-            width: 22px;
-            height: 22px;
-        }
-
-        .back-button:hover {
-            background: #e2e8f0;
-        }
-
-        .back-button:active {
-            transform: scale(0.96);
-        }
+        .back-button svg { display: block; width: 22px; height: 22px; }
+        .back-button:hover { background: #e2e8f0; }
+        .back-button:active { transform: scale(0.96); }
 
         .back-button:focus-visible,
         button:focus-visible {
@@ -97,10 +79,7 @@
             outline-offset: 3px;
         }
 
-        .booking-header h1 {
-            margin: 0;
-            font-size: 21px;
-        }
+        .booking-header h1 { margin: 0; font-size: 21px; }
 
         .booking-error,
         .booking-success {
@@ -155,10 +134,7 @@
             background: #e2e8f0;
         }
 
-        .venue-info {
-            min-width: 0;
-            flex: 1;
-        }
+        .venue-info { min-width: 0; flex: 1; }
 
         .venue-summary h2 {
             margin: 0 0 8px;
@@ -179,19 +155,9 @@
             font-weight: 800;
         }
 
-        .content {
-            width: 100%;
-            padding: 0 20px 30px;
-        }
-
-        .section {
-            margin-top: 28px;
-        }
-
-        .section-title {
-            margin: 0 0 14px;
-            font-size: 19px;
-        }
+        .content { width: 100%; padding: 0 20px 30px; }
+        .section { margin-top: 28px; }
+        .section-title { margin: 0 0 14px; font-size: 19px; }
 
         .calendar-box {
             width: 100%;
@@ -232,10 +198,7 @@
             cursor: pointer;
         }
 
-        .calendar-nav:disabled {
-            opacity: 0.35;
-            cursor: not-allowed;
-        }
+        .calendar-nav:disabled { opacity: 0.35; cursor: not-allowed; }
 
         .month-selector,
         .year-selector {
@@ -258,9 +221,7 @@
         }
 
         .month-picker.show,
-        .year-picker.show {
-            display: grid;
-        }
+        .year-picker.show { display: grid; }
 
         .month-choice,
         .year-choice {
@@ -286,9 +247,7 @@
             gap: 6px;
         }
 
-        .calendar-weekdays {
-            margin-bottom: 8px;
-        }
+        .calendar-weekdays { margin-bottom: 8px; }
 
         .weekday {
             padding: 7px 0;
@@ -330,10 +289,7 @@
             color: #fff;
         }
 
-        .calendar-day.disabled {
-            color: #cbd5e1;
-            cursor: not-allowed;
-        }
+        .calendar-day.disabled { color: #cbd5e1; cursor: not-allowed; }
 
         .time-options {
             display: grid;
@@ -354,6 +310,41 @@
             cursor: pointer;
         }
 
+        .time-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            min-height: 65px;
+        }
+
+        .time-option .slot-status {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .time-option:disabled { cursor: not-allowed; opacity: 1; }
+
+        .time-option:disabled.booked {
+            border-color: #fecaca;
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+        .time-option:disabled.maintenance {
+            border-color: #fed7aa;
+            background: #fff7ed;
+            color: #c2410c;
+        }
+
+        .time-option:disabled.unavailable {
+            border-color: #e2e8f0;
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
         .time-option.active,
         .duration-option.active {
             border-color: var(--primary);
@@ -363,13 +354,11 @@
 
         .duration-options {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
+            grid-template-columns: 1fr;
             gap: 10px;
         }
 
-        .duration-option {
-            padding: 10px 5px;
-        }
+        .duration-option { padding: 10px 5px; }
 
         .booking-summary {
             margin-top: 28px;
@@ -379,10 +368,7 @@
             border-radius: 20px;
         }
 
-        .booking-summary-title {
-            margin: 0 0 10px;
-            font-size: 17px;
-        }
+        .booking-summary-title { margin: 0 0 10px; font-size: 17px; }
 
         .summary-row {
             display: flex;
@@ -394,9 +380,7 @@
             font-size: 14px;
         }
 
-        .summary-row:last-child {
-            border-bottom: none;
-        }
+        .summary-row:last-child { border-bottom: none; }
 
         .summary-row span:last-child {
             color: var(--text);
@@ -425,16 +409,8 @@
             margin: 0 auto;
         }
 
-        .total-label {
-            margin-bottom: 4px;
-            color: var(--muted);
-            font-size: 12px;
-        }
-
-        .total-price {
-            font-size: 22px;
-            font-weight: 900;
-        }
+        .total-label { margin-bottom: 4px; color: var(--muted); font-size: 12px; }
+        .total-price { font-size: 22px; font-weight: 900; }
 
         .continue-button {
             min-height: 52px;
@@ -448,28 +424,15 @@
             cursor: pointer;
         }
 
-        .continue-button:hover {
-            background: var(--primary-dark);
-        }
+        .continue-button:hover { background: var(--primary-dark); }
 
         @media (max-width: 480px) {
-            .booking-page {
-                padding-bottom: 100px;
-            }
-
-            .booking-header {
-                gap: 12px;
-                padding: 13px 14px;
-            }
-
-            .booking-header h1 {
-                font-size: 19px;
-            }
+            .booking-page { padding-bottom: 100px; }
+            .booking-header { gap: 12px; padding: 13px 14px; }
+            .booking-header h1 { font-size: 19px; }
 
             .booking-error,
-            .booking-success {
-                margin: 14px 14px 0;
-            }
+            .booking-success { margin: 14px 14px 0; }
 
             .venue-summary {
                 margin: 14px;
@@ -484,80 +447,35 @@
                 border-radius: 12px;
             }
 
-            .venue-summary h2 {
-                font-size: 16px;
-            }
-
-            .venue-summary p {
-                font-size: 12px;
-            }
-
-            .venue-price {
-                font-size: 13px;
-            }
-
-            .content {
-                padding: 0 14px 25px;
-            }
-
-            .section-title {
-                font-size: 17px;
-            }
+            .venue-summary h2 { font-size: 16px; }
+            .venue-summary p { font-size: 12px; }
+            .venue-price { font-size: 13px; }
+            .content { padding: 0 14px 25px; }
+            .section-title { font-size: 17px; }
 
             .calendar-box {
                 padding: 12px 8px;
                 border-radius: 18px;
             }
 
-            .calendar-header {
-                gap: 6px;
-            }
-
-            .calendar-nav {
-                width: 36px;
-                height: 38px;
-            }
+            .calendar-header { gap: 6px; }
+            .calendar-nav { width: 36px; height: 38px; }
 
             .month-selector,
-            .year-selector {
-                padding: 10px 8px;
-                font-size: 12px;
-            }
+            .year-selector { padding: 10px 8px; font-size: 12px; }
 
             .calendar-weekdays,
-            .calendar-days {
-                gap: 3px;
-            }
+            .calendar-days { gap: 3px; }
 
-            .weekday {
-                font-size: 11px;
-            }
+            .weekday { font-size: 11px; }
+            .calendar-day { border-radius: 8px; font-size: 12px; }
 
-            .calendar-day {
-                border-radius: 8px;
-                font-size: 12px;
-            }
+            .time-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
-            .time-options,
-            .duration-options {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-
-            .booking-summary {
-                padding: 15px;
-            }
-
-            .booking-bottom {
-                padding: 10px 14px;
-            }
-
-            .booking-bottom-inner {
-                gap: 10px;
-            }
-
-            .total-price {
-                font-size: 18px;
-            }
+            .booking-summary { padding: 15px; }
+            .booking-bottom { padding: 10px 14px; }
+            .booking-bottom-inner { gap: 10px; }
+            .total-price { font-size: 18px; }
 
             .continue-button {
                 min-height: 48px;
@@ -565,9 +483,7 @@
             }
 
             .month-picker,
-            .year-picker {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
+            .year-picker { grid-template-columns: repeat(2, minmax(0, 1fr)); }
         }
 
         @media (max-width: 360px) {
@@ -577,32 +493,15 @@
                 min-width: 42px;
             }
 
-            .booking-header {
-                gap: 10px;
-            }
-
-            .calendar-box {
-                padding: 10px 6px;
-            }
-
-            .calendar-nav {
-                width: 32px;
-                height: 36px;
-            }
-
-            .calendar-selector {
-                gap: 5px;
-            }
+            .booking-header { gap: 10px; }
+            .calendar-box { padding: 10px 6px; }
+            .calendar-nav { width: 32px; height: 36px; }
+            .calendar-selector { gap: 5px; }
 
             .month-selector,
-            .year-selector {
-                padding: 9px 6px;
-                font-size: 11px;
-            }
+            .year-selector { padding: 9px 6px; font-size: 11px; }
 
-            .total-price {
-                font-size: 16px;
-            }
+            .total-price { font-size: 16px; }
 
             .continue-button {
                 padding: 0 12px;
@@ -614,10 +513,7 @@
 
 <body>
 
-<div
-    class="booking-page"
-    data-price="{{ $venue->price_per_hour }}"
->
+<div class="booking-page" data-price="{{ $venue->price_per_hour }}">
 
     <header class="booking-header">
         <button
@@ -669,7 +565,6 @@
     @endif
 
     <div class="venue-summary">
-
         @if ($venue->image)
             <img
                 src="{{ asset('storage/' . ltrim($venue->image, '/')) }}"
@@ -677,23 +572,19 @@
                 onerror="this.onerror=null; this.style.display='none';"
             >
         @else
-            <div
-                style="width:110px;height:100px;display:flex;align-items:center;justify-content:center;background:#e2e8f0;border-radius:16px;flex-shrink:0;"
-            >
+            <div style="width:110px;height:100px;display:flex;align-items:center;justify-content:center;background:#e2e8f0;border-radius:16px;flex-shrink:0;">
                 🏟️
             </div>
         @endif
 
         <div class="venue-info">
             <h2>{{ $venue->name }}</h2>
-
             <p>📍 {{ $venue->location }}</p>
 
             <div class="venue-price">
                 Rp{{ number_format($venue->price_per_hour, 0, ',', '.') }}/jam
             </div>
         </div>
-
     </div>
 
     <form
@@ -721,7 +612,7 @@
             type="hidden"
             name="duration"
             id="durationInput"
-            value="{{ old('duration', 1) }}"
+            value="1"
         >
 
         <main class="content">
@@ -730,7 +621,6 @@
                 <h2 class="section-title">Pilih Tanggal</h2>
 
                 <div class="calendar-box">
-
                     <div class="calendar-header">
                         <button
                             type="button"
@@ -777,21 +667,35 @@
 
                         <div class="calendar-days" id="calendarDays"></div>
                     </div>
-
                 </div>
             </section>
 
             <section class="section">
                 <h2 class="section-title">Pilih Jam</h2>
 
+                <div
+                    id="availabilityNotice"
+                    style="display:none;margin-bottom:12px;padding:13px 15px;border:1px solid #fecaca;background:#fef2f2;color:#991b1b;border-radius:12px;"
+                ></div>
+
+                <div style="display:flex;gap:14px;flex-wrap:wrap;margin-bottom:12px;font-size:12px;color:#64748b;">
+                    <span>🟢 Tersedia</span>
+                    <span>🔴 Dipesan</span>
+                    <span>🟠 Dalam Perbaikan</span>
+                    <span>🔵 Dipilih</span>
+                </div>
+
                 <div class="time-options">
-                    @foreach (['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '21:00', '22:00'] as $time)
+                    @foreach (range(8, 21) as $hour)
+                        @php($time = sprintf('%02d:00', $hour))
+
                         <button
                             type="button"
                             class="time-option {{ old('start_time', '08:00') === $time ? 'active' : '' }}"
                             data-time="{{ $time }}"
                         >
                             {{ $time }}
+                            <small class="slot-status">Tersedia</small>
                         </button>
                     @endforeach
                 </div>
@@ -801,15 +705,15 @@
                 <h2 class="section-title">Durasi Bermain</h2>
 
                 <div class="duration-options">
-                    @foreach ([1, 2, 3, 4] as $duration)
-                        <button
-                            type="button"
-                            class="duration-option {{ (int) old('duration', 1) === $duration ? 'active' : '' }}"
-                            data-duration="{{ $duration }}"
-                        >
-                            {{ $duration }} Jam
-                        </button>
-                    @endforeach
+                    <button
+                        type="button"
+                        class="duration-option active"
+                        data-duration="1"
+                        disabled
+                        style="cursor:not-allowed;opacity:1;"
+                    >
+                        1 Jam (Durasi Tetap)
+                    </button>
                 </div>
             </section>
 
@@ -889,6 +793,13 @@ document.addEventListener('DOMContentLoaded', function () {
     const timeButtons = document.querySelectorAll('.time-option');
     const durationButtons = document.querySelectorAll('.duration-option');
     const bookingForm = document.getElementById('bookingForm');
+    const availabilityNotice = document.getElementById('availabilityNotice');
+
+    const availabilityUrl = @json(route('bookings.availability', $venue));
+
+    let bookedIntervals = [];
+    let maintenanceActive = false;
+    let availabilityLoaded = false;
 
     const namaBulan = [
         'Januari', 'Februari', 'Maret', 'April',
@@ -1016,8 +927,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 tanggalDipilih = new Date(tanggal);
+
                 updateTanggalInput();
                 tampilkanKalender();
+                muatKetersediaan();
             });
 
             calendarDays.appendChild(tombolTanggal);
@@ -1137,10 +1050,210 @@ document.addEventListener('DOMContentLoaded', function () {
         tampilkanKalender();
     });
 
+    function waktuMenit(waktu) {
+        const bagian = waktu.split(':').map(Number);
+        return bagian[0] * 60 + bagian[1];
+    }
+
+    /**
+     * Memperbarui status setiap slot berdasarkan booking aktif.
+     */
+    function perbaruiSlot() {
+        const durasiMenit = 60;
+        let selectedStillValid = false;
+
+        timeButtons.forEach(function (button) {
+            const mulai = waktuMenit(button.dataset.time);
+            const selesai = mulai + durasiMenit;
+
+            const bentrok = bookedIntervals.some(function (booking) {
+                return mulai < waktuMenit(booking.end_time.substring(0, 5)) &&
+                    selesai > waktuMenit(booking.start_time.substring(0, 5));
+            });
+
+            const diLuarJam =
+                mulai < (8 * 60) || selesai > (22 * 60);
+
+            const label = button.querySelector('.slot-status');
+
+            button.classList.remove(
+                'booked',
+                'maintenance',
+                'unavailable'
+            );
+
+            if (maintenanceActive) {
+                button.disabled = true;
+                button.classList.add('maintenance');
+                label.textContent = 'Perbaikan';
+            } else if (bentrok) {
+                button.disabled = true;
+                button.classList.add('booked');
+                label.textContent = 'Dipesan';
+            } else if (diLuarJam) {
+                button.disabled = true;
+                button.classList.add('unavailable');
+                label.textContent = 'Tidak tersedia';
+            } else {
+                button.disabled = false;
+
+                label.textContent =
+                    button.dataset.time === startTimeInput.value
+                        ? 'Dipilih'
+                        : 'Tersedia';
+            }
+
+            if (
+                button.dataset.time === startTimeInput.value &&
+                !button.disabled
+            ) {
+                selectedStillValid = true;
+            }
+
+            button.classList.toggle(
+                'active',
+                button.dataset.time === startTimeInput.value &&
+                !button.disabled
+            );
+        });
+
+        if (!selectedStillValid) {
+            const firstAvailable = Array.from(timeButtons).find(
+                function (button) {
+                    return !button.disabled;
+                }
+            );
+
+            if (firstAvailable) {
+                startTimeInput.value = firstAvailable.dataset.time;
+                summaryTime.textContent = firstAvailable.dataset.time;
+
+                firstAvailable.classList.add('active');
+
+                firstAvailable.querySelector('.slot-status').textContent =
+                    'Dipilih';
+            } else {
+                startTimeInput.value = '';
+                summaryTime.textContent = 'Tidak tersedia';
+            }
+        }
+    }
+
+    /**
+     * Mengambil data booking dan maintenance dari backend.
+     */
+    async function muatKetersediaan() {
+        availabilityNotice.style.display = 'none';
+
+        availabilityLoaded = false;
+        bookedIntervals = [];
+        maintenanceActive = false;
+
+        // Semua slot dikunci sementara data jadwal sedang dimuat.
+        timeButtons.forEach(function (button) {
+            button.disabled = true;
+
+            button.classList.remove(
+                'active',
+                'booked',
+                'maintenance',
+                'unavailable'
+            );
+
+            button.querySelector('.slot-status').textContent = 'Memuat...';
+        });
+
+        try {
+            const response = await fetch(
+                availabilityUrl +
+                '?date=' +
+                encodeURIComponent(bookingDateInput.value),
+                {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error('Gagal memuat jadwal');
+            }
+
+            const data = await response.json();
+
+            bookedIntervals = Array.isArray(data.bookings)
+                ? data.bookings
+                : [];
+
+            maintenanceActive = Boolean(data.maintenance);
+            availabilityLoaded = true;
+
+            if (maintenanceActive) {
+                availabilityNotice.style.display = 'block';
+                availabilityNotice.replaceChildren();
+
+                const title = document.createElement('strong');
+                title.textContent =
+                    'Lapangan sedang dalam perbaikan.';
+
+                const reason = document.createElement('p');
+                reason.textContent =
+                    'Alasan: ' +
+                    (data.maintenance.reason || 'Tidak ada keterangan.');
+
+                const period = document.createElement('p');
+                period.textContent =
+                    'Periode: ' +
+                    data.maintenance.start_date +
+                    ' sampai ' +
+                    data.maintenance.end_date;
+
+                availabilityNotice.append(
+                    title,
+                    reason,
+                    period
+                );
+            }
+
+            perbaruiSlot();
+
+        } catch (error) {
+            availabilityLoaded = false;
+
+            availabilityNotice.style.display = 'block';
+
+            availabilityNotice.textContent =
+                'Jadwal belum dapat dimuat. Silakan muat ulang halaman sebelum melakukan booking.';
+
+            timeButtons.forEach(function (button) {
+                button.disabled = true;
+                button.classList.remove('active');
+
+                button.querySelector('.slot-status').textContent =
+                    'Gagal memuat';
+            });
+
+            startTimeInput.value = '';
+            summaryTime.textContent = 'Jadwal tidak tersedia';
+        }
+    }
+
+    /**
+     * Memilih jam booking.
+     */
     timeButtons.forEach(function (tombol) {
         tombol.addEventListener('click', function () {
+            if (this.disabled) {
+                return;
+            }
+
             timeButtons.forEach(function (item) {
                 item.classList.remove('active');
+
+                if (!item.disabled) {
+                    item.querySelector('.slot-status').textContent =
+                        'Tersedia';
+                }
             });
 
             this.classList.add('active');
@@ -1149,36 +1262,50 @@ document.addEventListener('DOMContentLoaded', function () {
 
             summaryTime.textContent = waktu;
             startTimeInput.value = waktu;
+
+            this.querySelector('.slot-status').textContent = 'Dipilih';
         });
     });
 
-    durationButtons.forEach(function (tombol) {
-        tombol.addEventListener('click', function () {
-            durationButtons.forEach(function (item) {
-                item.classList.remove('active');
-            });
+    // Durasi booking ditetapkan satu jam dan tidak dapat diubah.
+    durationInput.value = '1';
+    summaryDuration.textContent = '1 Jam';
+    totalPrice.textContent = formatRupiah(pricePerHour);
 
-            this.classList.add('active');
-
-            const durasi = Number(this.dataset.duration);
-            const total = pricePerHour * durasi;
-
-            totalPrice.textContent = formatRupiah(total);
-            summaryDuration.textContent = durasi + ' Jam';
-            durationInput.value = durasi;
-        });
-    });
-
+    /**
+     * Validasi sebelum form dikirim.
+     */
     bookingForm.addEventListener('submit', function (event) {
-        if (!bookingDateInput.value) {
+        const selectedSlotAvailable = Array.from(timeButtons).some(
+            function (button) {
+                return (
+                    button.dataset.time === startTimeInput.value &&
+                    !button.disabled
+                );
+            }
+        );
+
+        if (
+            !availabilityLoaded ||
+            !bookingDateInput.value ||
+            !startTimeInput.value ||
+            durationInput.value !== '1' ||
+            maintenanceActive ||
+            !selectedSlotAvailable
+        ) {
             event.preventDefault();
-            alert('Silakan pilih tanggal booking terlebih dahulu.');
+
+            alert(
+                'Tanggal atau jam booking tidak tersedia. Silakan pilih jadwal lain.'
+            );
         }
     });
 
-    // Sinkronkan tampilan dengan nilai form saat halaman dibuka.
+    // Sinkronisasi tampilan awal.
     const waktuAwal = startTimeInput.value || '08:00';
-    const durasiAwal = Number(durationInput.value || 1);
+    const durasiAwal = 1;
+
+    durationInput.value = '1';
 
     timeButtons.forEach(function (tombol) {
         tombol.classList.toggle(
@@ -1188,6 +1315,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     summaryTime.textContent = waktuAwal;
+    summaryDuration.textContent = durasiAwal + ' Jam';
+
+    totalPrice.textContent =
+        formatRupiah(pricePerHour * durasiAwal);
 
     durationButtons.forEach(function (tombol) {
         tombol.classList.toggle(
@@ -1196,11 +1327,9 @@ document.addEventListener('DOMContentLoaded', function () {
         );
     });
 
-    summaryDuration.textContent = durasiAwal + ' Jam';
-    totalPrice.textContent = formatRupiah(pricePerHour * durasiAwal);
-
     updateTanggalInput();
     tampilkanKalender();
+    muatKetersediaan();
 });
 </script>
 

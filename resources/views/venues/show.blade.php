@@ -1,5 +1,7 @@
+
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -222,6 +224,59 @@
             to { transform: scaleX(1); }
         }
 
+        /* STATUS MAINTENANCE */
+        .maintenance-panel {
+            margin: 28px 0;
+            padding: 18px 20px;
+            border: 1px solid #e5eaf2;
+            border-radius: 18px;
+            background: #f8fafc;
+            animation: fadeUp .6s ease .6s both;
+        }
+
+        .maintenance-heading {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin: 0 0 12px;
+            color: #172033;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .maintenance-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 12px;
+            margin-bottom: 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .maintenance-status.available {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .maintenance-status.scheduled {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .maintenance-status.active {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .maintenance-detail {
+            margin: 5px 0 0;
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
         /* DESCRIPTION */
         .detail-description {
             animation: fadeUp .6s ease .55s both;
@@ -356,6 +411,13 @@
         .booking-button:focus-visible {
             outline: 3px solid #93c5fd;
             outline-offset: 3px;
+        }
+
+        .booking-button.disabled {
+            background: #94a3b8;
+            box-shadow: none;
+            cursor: not-allowed;
+            pointer-events: none;
         }
 
         /* TABLET */
@@ -495,9 +557,27 @@
 </head>
 
 <body>
+
+@php
+    $today = now()->toDateString();
+
+    $activeMaintenance = $venue->maintenances->first(function ($maintenance) use ($today) {
+        return $maintenance->start_date->toDateString() <= $today
+            && $maintenance->end_date->toDateString() >= $today;
+    });
+
+    $upcomingMaintenance = $venue->maintenances
+        ->filter(function ($maintenance) use ($today) {
+            return $maintenance->start_date->toDateString() > $today;
+        })
+        ->sortBy('start_date')
+        ->first();
+@endphp
+
 <div class="detail-page">
 
     <div class="detail-header">
+
         @php
             $venueImage = $venue->image ?? null;
             $venueImagePath = $venueImage ? ltrim($venueImage, '/') : null;
@@ -527,6 +607,7 @@
                 alt="{{ $venue->name }}"
                 onerror="this.style.display='none'; document.getElementById('venue-image-placeholder').style.display='flex';"
             >
+
             <div
                 id="venue-image-placeholder"
                 class="detail-image-placeholder"
@@ -563,12 +644,15 @@
                 <path d="M12 19l-7-7 7-7"></path>
             </svg>
         </button>
+
     </div>
 
     <div class="detail-card">
+
         <div class="detail-title-row">
             <div>
                 <h1>{{ $venue->name }}</h1>
+
                 <div class="detail-location">
                     📍 {{ $venue->location }}
                 </div>
@@ -586,8 +670,68 @@
 
         <div class="detail-divider"></div>
 
+        {{-- INFORMASI MAINTENANCE --}}
+        @if ($activeMaintenance)
+            <section class="maintenance-panel">
+                <h3 class="maintenance-heading">🛠️ Informasi Maintenance</h3>
+
+                <span class="maintenance-status active">
+                    Dalam Perbaikan
+                </span>
+
+                <p class="maintenance-detail">
+                    <strong>Periode:</strong>
+                    {{ $activeMaintenance->start_date->format('d M Y') }}
+                    – {{ $activeMaintenance->end_date->format('d M Y') }}
+                </p>
+
+                <p class="maintenance-detail">
+                    <strong>Keterangan:</strong>
+                    {{ $activeMaintenance->reason }}
+                </p>
+            </section>
+
+        @elseif ($upcomingMaintenance)
+            <section class="maintenance-panel">
+                <h3 class="maintenance-heading">🛠️ Informasi Maintenance</h3>
+
+                <span class="maintenance-status scheduled">
+                    Terjadwal
+                </span>
+
+                <p class="maintenance-detail">
+                    <strong>Periode:</strong>
+                    {{ $upcomingMaintenance->start_date->format('d M Y') }}
+                    – {{ $upcomingMaintenance->end_date->format('d M Y') }}
+                </p>
+
+                <p class="maintenance-detail">
+                    <strong>Keterangan:</strong>
+                    {{ $upcomingMaintenance->reason }}
+                </p>
+
+                <p class="maintenance-detail">
+                    Lapangan masih dapat dipesan untuk tanggal di luar periode maintenance.
+                </p>
+            </section>
+
+        @else
+            <section class="maintenance-panel">
+                <h3 class="maintenance-heading">🛠️ Status Lapangan</h3>
+
+                <span class="maintenance-status available">
+                    Tersedia
+                </span>
+
+                <p class="maintenance-detail">
+                    Belum ada jadwal maintenance untuk lapangan ini.
+                </p>
+            </section>
+        @endif
+
         <div class="detail-description">
             <h3>Tentang Lapangan</h3>
+
             <p>
                 {{ $venue->description ?? 'Lapangan olahraga yang nyaman dan siap digunakan untuk bermain bersama teman.' }}
             </p>
@@ -601,16 +745,30 @@
             <div class="facility">🅿️ Parkir</div>
             <div class="facility">🪑 Area Tunggu</div>
         </div>
+
     </div>
 </div>
 
 <div class="booking-area">
-    <a
-        href="{{ route('bookings.create', $venue) }}"
-        class="booking-button"
-    >
-        Booking Sekarang
-    </a>
+
+    @if ($activeMaintenance)
+        <a
+            href="javascript:void(0)"
+            class="booking-button disabled"
+            aria-disabled="true"
+            title="Lapangan sedang dalam perbaikan."
+        >
+            Booking Ditutup - Dalam Perbaikan
+        </a>
+    @else
+        <a
+            href="{{ route('bookings.create', $venue) }}"
+            class="booking-button"
+        >
+            Booking Sekarang
+        </a>
+    @endif
+
 </div>
 
 </body>

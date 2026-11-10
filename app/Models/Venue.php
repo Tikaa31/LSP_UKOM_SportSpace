@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Booking;
 use App\Models\Sport;
+use App\Models\VenueMaintenance;
 
 class Venue extends Model
 {
@@ -31,5 +32,13 @@ class Venue extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Relasi ke data maintenance milik lapangan ini.
+     */
+    public function maintenances()
+    {
+        return $this->hasMany(VenueMaintenance::class);
     }
 }

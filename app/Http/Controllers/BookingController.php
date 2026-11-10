@@ -8,66 +8,187 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class BookingController extends Controller
 {
     public function create(Venue $venue)
     {
-        return view('bookings.create', compact('venue'));
+        $maintenances = $venue->maintenances()
+            ->whereDate('end_date', '>=', today())
+            ->orderBy('start_date')
+            ->get();
+
+        return view('bookings.create', compact('venue', 'maintenances'));
     }
 
+    /**
+     * Mengambil jadwal booking dan maintenance pada tanggal terpilih.
+     */
+    public function availability(Request $request, Venue $venue)
+    {
+        $validated = $request->validate([
+            'date' => ['required', 'date', 'after_or_equal:today'],
+        ]);
+
+        $date = $validated['date'];
+
+        $maintenance = $venue->maintenances()
+            ->whereDate('start_date', '<=', $date)
+            ->whereDate('end_date', '>=', $date)
+            ->where('status', 'scheduled')
+            ->first();
+
+        $bookings = Booking::query()
+            ->where('venue_id', $venue->id)
+            ->whereDate('booking_date', $date)
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->orderBy('start_time')
+            ->get(['start_time', 'end_time']);
+
+        return response()->json([
+            'maintenance' => $maintenance ? [
+                'reason' => $maintenance->reason,
+                'start_date' => $maintenance->start_date->format('Y-m-d'),
+                'end_date' => $maintenance->end_date->format('Y-m-d'),
+            ] : null,
+
+            'bookings' => $bookings,
+        ]);
+    }
+
+    /**
+     * Menyimpan booking dengan durasi tetap satu jam.
+     */
     public function store(Request $request, Venue $venue)
     {
         $validated = $request->validate([
-            'booking_date' => 'required|date|after_or_equal:today',
-            'start_time' => 'required|date_format:H:i',
-            'duration' => 'required|integer|min:1|max:24',
+            'booking_date' => [
+                'required',
+                'date',
+                'after_or_equal:today',
+            ],
+            'start_time' => [
+                'required',
+                'date_format:H:i',
+            ],
+            'duration' => [
+                'required',
+                'integer',
+                'in:1',
+            ],
+        ], [
+            'duration.in' => 'Durasi booking hanya dapat dilakukan selama 1 jam.',
         ]);
 
-        $duration = (int) $validated['duration'];
         $startTime = $validated['start_time'];
 
         $start = Carbon::createFromFormat('H:i', $startTime);
-        $end = $start->copy()->addHours($duration);
 
-        if ($end->format('Y-m-d') !== $start->format('Y-m-d')) {
-            return back()->withInput()->withErrors([
-                'start_time' => 'Booking tidak boleh melewati tengah malam.',
-            ]);
+        $startMinute = ($start->hour * 60) + $start->minute;
+
+        $end = $start->copy()->addHour();
+
+        $endMinute = ($end->hour * 60) + $end->minute;
+
+        /*
+         * Jam operasional:
+         * Mulai booking: 08.00 sampai 21.00.
+         * Jam tutup: 22.00.
+         * Setiap booking berlangsung tepat satu jam.
+         */
+        if (
+            $start->minute !== 0 ||
+            $startMinute < (8 * 60) ||
+            $startMinute >= (22 * 60) ||
+            $endMinute > (22 * 60)
+        ) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'start_time' => 'Jam booking harus dimulai antara pukul 08.00 sampai 21.00 dan selesai paling lambat pukul 22.00.',
+                ]);
+        }
+
+        if (!$venue->is_active) {
+            return back()
+                ->withInput()
+                ->withErrors([
+                    'booking_date' => 'Lapangan sedang tidak tersedia.',
+                ]);
         }
 
         $endTime = $end->format('H:i:s');
 
-        $overlapExists = Booking::where('venue_id', $venue->id)
-            ->whereDate('booking_date', $validated['booking_date'])
-            ->where('status', '!=', 'cancelled')
-            ->where(function ($query) use ($startTime, $endTime) {
-                $query->where('start_time', '<', $endTime)
-                    ->where('end_time', '>', $startTime);
-            })
-            ->exists();
-
-        if ($overlapExists) {
-            return back()->withInput()->withErrors([
-                'start_time' => 'Jadwal lapangan sudah dipesan pada waktu tersebut. Silakan pilih jam lain.',
-            ]);
-        }
-
+        /*
+         * Pemeriksaan maintenance dan bentrok dilakukan kembali
+         * di backend saat booking disimpan.
+         */
         $booking = DB::transaction(function () use (
             $validated,
             $venue,
             $startTime,
-            $endTime,
-            $duration
+            $endTime
         ) {
+            /*
+             * Mengunci data venue selama proses transaksi
+             * untuk mengurangi risiko booking bersamaan.
+             */
+            $lockedVenue = Venue::whereKey($venue->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if (!$lockedVenue->is_active) {
+                throw ValidationException::withMessages([
+                    'booking_date' => 'Lapangan sedang tidak tersedia.',
+                ]);
+            }
+
+            /*
+             * Cek apakah tanggal booking masuk masa maintenance.
+             */
+            $maintenanceExists = $lockedVenue->maintenances()
+                ->whereDate('start_date', '<=', $validated['booking_date'])
+                ->whereDate('end_date', '>=', $validated['booking_date'])
+                ->where('status', 'scheduled')
+                ->exists();
+
+            if ($maintenanceExists) {
+                throw ValidationException::withMessages([
+                    'booking_date' => 'Lapangan sedang dalam masa perbaikan pada tanggal yang dipilih.',
+                ]);
+            }
+
+            /*
+             * Cek bentrok dengan booking aktif.
+             * Booking pending dan confirmed dianggap memblokir slot.
+             */
+            $overlapExists = Booking::query()
+                ->where('venue_id', $lockedVenue->id)
+                ->whereDate('booking_date', $validated['booking_date'])
+                ->whereIn('status', ['pending', 'confirmed'])
+                ->where('start_time', '<', $endTime)
+                ->where('end_time', '>', $startTime)
+                ->exists();
+
+            if ($overlapExists) {
+                throw ValidationException::withMessages([
+                    'start_time' => 'Jadwal lapangan sudah dipesan pada waktu tersebut. Silakan pilih jam lain.',
+                ]);
+            }
+
+            /*
+             * Durasi dan harga ditetapkan dari backend,
+             * bukan mengikuti nilai yang dikirim browser.
+             */
             return Booking::create([
                 'user_id' => auth()->id(),
-                'venue_id' => $venue->id,
+                'venue_id' => $lockedVenue->id,
                 'booking_date' => $validated['booking_date'],
                 'start_time' => $startTime,
                 'end_time' => $endTime,
-                'duration' => $duration,
-                'total_price' => $venue->price_per_hour * $duration,
+                'duration' => 1,
+                'total_price' => $lockedVenue->price_per_hour,
                 'status' => 'pending',
                 'payment_method' => 'qris',
                 'payment_status' => 'unpaid',

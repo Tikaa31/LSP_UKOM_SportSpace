@@ -196,10 +196,12 @@
             white-space: nowrap;
         }
 
+        /* TOMBOL AKSI DESKTOP */
         .action-buttons {
             display: flex;
             align-items: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .action-buttons form {
@@ -207,7 +209,8 @@
         }
 
         .edit-button,
-        .delete-button {
+        .delete-button,
+        .maintenance-button {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -220,6 +223,7 @@
             font-weight: 700;
             cursor: pointer;
             text-decoration: none;
+            white-space: nowrap;
         }
 
         .edit-button {
@@ -229,6 +233,16 @@
 
         .edit-button:hover {
             background: #dbeafe;
+        }
+
+        /* TOMBOL MAINTENANCE */
+        .maintenance-button {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .maintenance-button:hover {
+            background: #fde68a;
         }
 
         .delete-button {
@@ -334,7 +348,8 @@
         }
 
         .venue-card-actions .edit-button,
-        .venue-card-actions .delete-button {
+        .venue-card-actions .delete-button,
+        .venue-card-actions .maintenance-button {
             width: 100%;
             min-height: 44px;
         }
@@ -532,6 +547,7 @@
                         <td>
                             <div class="action-buttons">
 
+                                {{-- EDIT LAPANGAN --}}
                                 <a
                                     href="{{ route('admin.venues.edit', $venue) }}"
                                     class="edit-button"
@@ -539,6 +555,15 @@
                                     Edit
                                 </a>
 
+                                {{-- KELOLA MAINTENANCE --}}
+                                <a
+                                    href="{{ route('admin.venues.maintenance.index', $venue) }}"
+                                    class="maintenance-button"
+                                >
+                                    Maintenance
+                                </a>
+
+                                {{-- HAPUS LAPANGAN --}}
                                 <form
                                     action="{{ route('admin.venues.destroy', $venue) }}"
                                     method="POST"
@@ -633,6 +658,7 @@
 
                     <div class="venue-card-actions">
 
+                        {{-- EDIT LAPANGAN --}}
                         <a
                             href="{{ route('admin.venues.edit', $venue) }}"
                             class="edit-button"
@@ -640,6 +666,15 @@
                             Edit Lapangan
                         </a>
 
+                        {{-- KELOLA MAINTENANCE --}}
+                        <a
+                            href="{{ route('admin.venues.maintenance.index', $venue) }}"
+                            class="maintenance-button"
+                        >
+                            Kelola Maintenance
+                        </a>
+
+                        {{-- HAPUS LAPANGAN --}}
                         <form
                             action="{{ route('admin.venues.destroy', $venue) }}"
                             method="POST"

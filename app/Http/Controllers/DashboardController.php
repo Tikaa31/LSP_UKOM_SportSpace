@@ -11,7 +11,8 @@ class DashboardController extends Controller
     {
         $sports = Sport::all();
 
-        $venues = Venue::where('is_active', true)
+        $venues = Venue::with('maintenances')
+            ->where('is_active', true)
             ->orderByDesc('rating')
             ->get();
 
